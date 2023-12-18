@@ -1,0 +1,62 @@
+html {
+    background-color: rgb(55, 55, 55);
+}
+
+.bgWhite {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: 100vh;
+    margin: 4px;
+    padding: 16px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+.pkmns {
+    display: flex;
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;   
+}
+
+.card {
+    width: 150px;
+    height: 200px;
+    margin: 13px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 6px;
+}
+
+.type{
+    width: 65px;
+    height: auto;
+    border-radius: 5px;
+    background-color: red;
+    display: flex;
+    margin: 5px;
+    align-items: center;
+    justify-content: center;
+}
+.type2 {
+    width: 65px;
+    height: auto;
+    border-radius: 5px;
+    background-color: cadetblue;
+    display: flex;
+    margin: 5px;
+    align-items: center;
+    justify-content: center;
+}

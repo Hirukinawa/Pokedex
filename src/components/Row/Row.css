@@ -1,0 +1,21 @@
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.rowTab {
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-start;
+    flex-wrap: wrap;
+    padding-left: 48px;
+}
+
+.rowReverse{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
+}
