@@ -6,7 +6,7 @@ html {
     display: flex;
     flex-direction: column;
     width: auto;
-    height: 100vh;
+    height: auto;
     margin: 4px;
     padding: 16px;
     background-color: white;
@@ -24,11 +24,15 @@ html {
 .row {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;   
+    justify-content: space-around;
+}
+.column {
+    display: flex;
+    flex-direction: column;
 }
 
 .card {
-    width: 150px;
+    width: 185px;
     height: 200px;
     margin: 13px;
     padding: 6px;
@@ -36,8 +40,13 @@ html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
+    box-shadow: 2.5px 2.5px 5px grey;
     border-radius: 6px;
+}
+
+.link {
+    text-decoration-color: black;
+    text-decoration: none;
 }
 
 .type{
