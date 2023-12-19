@@ -19,7 +19,6 @@ export default function Card(pokemon: Pokemon) {
   )}.png`;
 
   const onHandleClick = () => {
-    // Use history.push para navegar para a rota desejada
     //alert(`Pokemon ${formataNumber(pokemon.id)}: ${pokemon.name}`);
     navigate(`/pokemon`);
   };
