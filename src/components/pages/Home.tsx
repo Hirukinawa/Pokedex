@@ -1,44 +1,42 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Pokemon } from "../../App";
+import { PokemonResult } from "../../App";
 import Card from "../Card";
-//import { NavLink } from "react-router-dom";
 import "../../App.css";
-//import PokemonDetails from "./PokemonDetails";
-//import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { getPokemons } from "../../service/Axios";
 
 export default function Home() {
-  const lista: Pokemon[] = [
-    { id: 1, name: "Bulbasaur" },
-    { id: 2, name: "Ivysaur" },
-    { id: 3, name: "Venusaur" },
-    { id: 4, name: "Charmander" },
-    { id: 5, name: "Charmeleon" },
-    { id: 6, name: "Charizard" },
-    { id: 7, name: "Squirtle" },
-    { id: 8, name: "Wartortle" },
-    { id: 9, name: "Blastoise" },
-    { id: 10, name: "Caterpie" },
-    { id: 11, name: "Metapod" },
-    { id: 12, name: "Butterfree" },
-    { id: 13, name: "Weedle" },
-    { id: 14, name: "Kakuna" },
-    { id: 15, name: "Beedrill" },
-    { id: 16, name: "Pidgey" },
-    { id: 17, name: "Pidgeotto" },
-    { id: 18, name: "Pidgeot" },
-    { id: 19, name: "Rattata" },
-    { id: 20, name: "Raticate" },
-    { id: 21, name: "Spearow" },
-    { id: 22, name: "Fearow" },
-    { id: 23, name: "Ekans" },
-    { id: 24, name: "Arbok" },
-    { id: 25, name: "Pikachu" },
-    { id: 26, name: "Raichu" },
-  ];
+  const [pokemons, setPokemons] = useState([]);
+
+  const getPokemon = async () => {
+    try {
+      const response = await axios.get(
+        "https://pokeapi.co/api/v2/pokemon?limit=26"
+      );
+      const data = response.data;
+      const results: [] = data.results;
+      setPokemons(getPokemons());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getPokemon();
+  }, []);
 
   function populaPkmn() {
-    const pkmns = lista.map((pokemon) => {
-      return <Card id={pokemon.id} name={pokemon.name} />;
+    console.log(pokemons);
+
+    const pkmns = pokemons.map((pokemon: PokemonResult) => {
+      console.log(pokemon);
+      const url: string = pokemon.url;
+      const str1 = url.replace("https://pokeapi.co/api/v2/pokemon/", "");
+      const num = str1.replace("/", "");
+      const name = pokemon.name;
+      const nameCapitalize = name.charAt(0).toUpperCase() + name.slice(1);
+      return <Card key={Number(num)} id={Number(num)} name={nameCapitalize} />;
     });
     return pkmns;
   }
@@ -46,7 +44,9 @@ export default function Home() {
   return (
     <div className="bgWhite">
       <h1>Pokédex foda</h1>
-      <div className="pkmns">{populaPkmn()}</div>
+      <div className="pkmns">
+        {pokemons.length === 0 ? <p>Carregando...</p> : populaPkmn()}
+      </div>
     </div>
   );
 }
