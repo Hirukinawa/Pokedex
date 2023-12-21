@@ -44,26 +44,22 @@ html {
     border-radius: 6px;
 }
 
-.link {
-    text-decoration-color: black;
-    text-decoration: none;
-}
-
 .type{
-    width: 65px;
+    width: 85px;
     height: auto;
     border-radius: 5px;
-    background-color: red;
+    border: 1px solid black;
     display: flex;
     margin: 5px;
     align-items: center;
     justify-content: center;
 }
-.type2 {
-    width: 65px;
+
+.typeDetails {
+    width: 50%;
     height: auto;
     border-radius: 5px;
-    background-color: cadetblue;
+    border: 1px solid black;
     display: flex;
     margin: 5px;
     align-items: center;

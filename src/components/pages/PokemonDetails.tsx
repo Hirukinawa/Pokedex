@@ -1,11 +1,11 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { Pokemon } from "../../App";
+import { PokemonAPI, TypeSlot } from "../../App";
 import "../../App.css";
 
 const PokemonDetails: React.FC = () => {
   const location = useLocation();
-  const pokemon: Pokemon = location.state?.pokemon || {
+  const pokemon: PokemonAPI = location.state?.pokemon || {
     id: 0,
     name: "Unknown",
   };
@@ -24,18 +24,30 @@ const PokemonDetails: React.FC = () => {
 
   const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
 
+  function types() {
+    const types = pokemon.types.map((typeSlot: TypeSlot) => {
+      return (
+        <div className="typeDetails">{typeSlot.type.name.toUpperCase()}</div>
+      );
+    });
+    return types;
+  }
+
   return (
     <div className="bgWhite">
       <h1>
         {pokemon.name} - {pokeNumber}
       </h1>
       <div className="row">
-        <img
-          src={link}
-          width="450px"
-          height="auto"
-          alt={`${pokemon.name} - ${pokeNumber}`}
-        />
+        <div className="column">
+          <img
+            src={link}
+            width="450px"
+            height="auto"
+            alt={`${pokemon.name} - ${pokeNumber}`}
+          />
+          <div className="row">{types()}</div>
+        </div>
         <div className="column">
           <h2>Descrição</h2>
           <p>

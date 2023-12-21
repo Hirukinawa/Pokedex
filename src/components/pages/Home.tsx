@@ -1,42 +1,67 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PokemonResult } from "../../App";
+import { PokemonAPI, PokemonResult } from "../../App";
 import Card from "../Card";
 import "../../App.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { getPokemons } from "../../service/Axios";
+//import axios from "axios";
+import { getPokemons, getUnityPokemon } from "../../service/Axios";
 
 export default function Home() {
-  const [pokemons, setPokemons] = useState([]);
+  const [pokemons, setPokemons] = useState<PokemonResult[]>([]);
+  const [pokemonsTypes, setPokemonsTypes] = useState<PokemonAPI[]>([]);
 
   const getPokemon = async () => {
     try {
-      const response = await axios.get(
-        "https://pokeapi.co/api/v2/pokemon?limit=26"
-      );
-      const data = response.data;
-      const results: [] = data.results;
-      setPokemons(getPokemons());
+      const pkmnsApi = await getPokemons();
+      setPokemons(pkmnsApi);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const getTypes = async () => {
+    const list: PokemonAPI[] = [];
+    try {
+      // Use Promise.all para esperar por todas as chamadas assíncronas
+      await Promise.all(
+        pokemons.map(async (pokemon: PokemonResult) => {
+          const url: string = pokemon.url;
+          const str1 = url.replace("https://pokeapi.co/api/v2/pokemon/", "");
+          const num = str1.replace("/", "");
+          const pokemonResult = await getUnityPokemon(Number(num));
+          list.push(pokemonResult);
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+    setPokemonsTypes(list);
   };
 
   useEffect(() => {
     getPokemon();
   }, []);
 
-  function populaPkmn() {
-    console.log(pokemons);
+  useEffect(() => {
+    // Chama getTypes quando pokemons é atualizado
+    if (pokemons.length > 0) {
+      getTypes();
+    }
+  }, [pokemons]);
 
-    const pkmns = pokemons.map((pokemon: PokemonResult) => {
-      console.log(pokemon);
-      const url: string = pokemon.url;
-      const str1 = url.replace("https://pokeapi.co/api/v2/pokemon/", "");
-      const num = str1.replace("/", "");
+  function populaPkmn() {
+    const pkmns = pokemonsTypes.map((pokemon: PokemonAPI) => {
       const name = pokemon.name;
       const nameCapitalize = name.charAt(0).toUpperCase() + name.slice(1);
-      return <Card key={Number(num)} id={Number(num)} name={nameCapitalize} />;
+      return (
+        <Card
+          key={pokemon.id}
+          id={pokemon.id}
+          name={nameCapitalize}
+          abilities={pokemon.abilities}
+          types={pokemon.types}
+        />
+      );
     });
     return pkmns;
   }
@@ -45,7 +70,7 @@ export default function Home() {
     <div className="bgWhite">
       <h1>Pokédex foda</h1>
       <div className="pkmns">
-        {pokemons.length === 0 ? <p>Carregando...</p> : populaPkmn()}
+        {pokemonsTypes.length === 0 ? <p>Carregando...</p> : populaPkmn()}
       </div>
     </div>
   );

@@ -17,35 +17,28 @@ export interface PokemonAPI {
   abilities: Abilities[];
 }
 
-// interface ApiResult {
-//   count: number | undefined;
-//   next: string | undefined;
-//   previous: string;
-//   results: PokemonResult[];
-// }
-
 export interface PokemonResult {
   name: string;
   url: string;
 }
 
-interface TypeSlot {
+export interface TypeSlot {
   slot: number;
-  type: Type[];
+  type: Type;
 }
 
-interface Type {
+export interface Type {
   name: string;
   url: string;
 }
 
-interface Abilities {
+export interface Abilities {
   slot: number;
-  ability: Ability[];
+  ability: Ability;
   is_hidden: boolean;
 }
 
-interface Ability {
+export interface Ability {
   name: string;
   url: string;
 }
