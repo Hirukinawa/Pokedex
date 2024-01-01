@@ -6,8 +6,9 @@ html {
     display: flex;
     flex-direction: column;
     width: auto;
+    min-height: 96vh;
     height: auto;
-    margin: 20px;
+    margin: 2vh;
     padding-left: 140px;
     padding-right: 140px;
     background-color: white;
