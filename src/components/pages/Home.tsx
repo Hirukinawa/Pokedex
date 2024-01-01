@@ -22,16 +22,14 @@ export default function Home() {
   const getTypes = async () => {
     const list: PokemonAPI[] = [];
     try {
-      // Use Promise.all para esperar por todas as chamadas assíncronas
-      await Promise.all(
-        pokemons.map(async (pokemon: PokemonResult) => {
-          const url: string = pokemon.url;
-          const str1 = url.replace("https://pokeapi.co/api/v2/pokemon/", "");
-          const num = str1.replace("/", "");
-          const pokemonResult = await getUnityPokemon(Number(num));
-          list.push(pokemonResult);
-        })
-      );
+      for (const pokemon of pokemons) {
+        const url: string = pokemon.url;
+        const str1 = url.replace("https://pokeapi.co/api/v2/pokemon/", "");
+        const num = str1.replace("/", "");
+        const num2 = Number(num);
+        const pokemonResult = await getUnityPokemon(num2);
+        list.push(pokemonResult);
+      }
     } catch (error) {
       console.log(error);
     }

@@ -5,7 +5,7 @@ const apiUrl = "https://pokeapi.co/api/v2";
 
 export async function getPokemons() {
   try {
-    const response = await axios.get(`${apiUrl}/pokemon?limit=15`);
+    const response = await axios.get(`${apiUrl}/pokemon?limit=151`);
     const data = response.data;
     const results: [] = data.results;
     return results;
@@ -19,7 +19,6 @@ export async function getUnityPokemon(num: number) {
   try {
     const response = await axios.get(`${apiUrl}/pokemon/${num}`);
     const data = response.data;
-    const sus = data.types;
     return data;
   } catch (error) {
     console.error(error);

@@ -37,7 +37,7 @@ export default function Card(pokemon: PokemonAPI) {
         </div>
         <p>
           <b>
-            {pokeNumber} - {pokemon.name}
+            {pokeNumber} - {pokemon.name.toUpperCase()}
           </b>
         </p>
         <div className="row">{types()}</div>
