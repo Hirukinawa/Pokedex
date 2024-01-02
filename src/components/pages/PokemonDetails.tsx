@@ -1,7 +1,8 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { PokemonAPI, TypeSlot } from "../../App";
+import { PokemonAPI, TypeSlotType } from "../../App";
 import "../../App.css";
+import TypeSlot from "../TypeSlot";
 
 const PokemonDetails: React.FC = () => {
   const location = useLocation();
@@ -25,9 +26,9 @@ const PokemonDetails: React.FC = () => {
   const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
 
   function types() {
-    const types = pokemon.types.map((typeSlot: TypeSlot) => {
+    const types = pokemon.types.map((typeSlot: TypeSlotType) => {
       return (
-        <div className="typeDetails">{typeSlot.type.name.toUpperCase()}</div>
+        <TypeSlot name={typeSlot.type.name.toUpperCase()} />
       );
     });
     return types;

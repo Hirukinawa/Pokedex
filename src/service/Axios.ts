@@ -25,3 +25,15 @@ export async function getUnityPokemon(num: number) {
     throw new Error("Erro ao obter dados do Pokémon");
   }
 }
+
+export async function getPokemonsJohto() {
+  try {
+    const response = await axios.get(`${apiUrl}/pokemon?limit=100`);
+    const data = response.data;
+    const results: [] = data.results;
+    return results;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Erro ao obter dados dos Pokémon");
+  }
+}

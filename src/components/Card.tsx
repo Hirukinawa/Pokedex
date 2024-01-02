@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PokemonAPI, TypeSlot } from "../App";
+import { PokemonAPI, TypeSlotType } from "../App";
 import { useNavigate } from "react-router-dom";
+import TypeSlot from "./TypeSlot";
 
 export default function Card(pokemon: PokemonAPI) {
   const navigate = useNavigate();
@@ -23,8 +24,8 @@ export default function Card(pokemon: PokemonAPI) {
   };
 
   function types() {
-    const types = pokemon.types.map((typeSlot: TypeSlot) => {
-      return <div className="type">{typeSlot.type.name.toUpperCase()}</div>;
+    const types = pokemon.types.map((typeSlot: TypeSlotType) => {
+      return <TypeSlot name={typeSlot.type.name.toUpperCase()}/>;
     });
     return types;
   }

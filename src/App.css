@@ -48,9 +48,8 @@ html {
 
 .type{
     width: 85px;
-    height: auto;
+    height: 30px;
     border-radius: 5px;
-    border: 1px solid black;
     display: flex;
     margin: 5px;
     align-items: center;
@@ -61,7 +60,6 @@ html {
     width: 50%;
     height: auto;
     border-radius: 5px;
-    border: 1px solid black;
     display: flex;
     margin: 5px;
     align-items: center;

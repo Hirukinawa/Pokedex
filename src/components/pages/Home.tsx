@@ -3,12 +3,19 @@ import { PokemonAPI, PokemonResult } from "../../App";
 import Card from "../Card";
 import "../../App.css";
 import { useEffect, useState } from "react";
-//import axios from "axios";
-import { getPokemons, getUnityPokemon } from "../../service/Axios";
+import { getPokemons, getPokemonsJohto, getUnityPokemon } from "../../service/Axios";
 
 export default function Home() {
   const [pokemons, setPokemons] = useState<PokemonResult[]>([]);
   const [pokemonsTypes, setPokemonsTypes] = useState<PokemonAPI[]>([]);
+  const [johto, setJohto] = useState(false);
+  const [hoenn, setHoenn] = useState(false);
+  const [sinnoh, setSinnoh] = useState(false);
+  const [unova, setUnova] = useState(false);
+  const [kalos, setKalos] = useState(false);
+  const [alola, setAlola] = useState(false);
+  const [galar, setGalar] = useState(false);
+  const [paldea, setPaldea] = useState(false);
 
   const getPokemon = async () => {
     try {
@@ -28,6 +35,7 @@ export default function Home() {
         const num = str1.replace("/", "");
         const num2 = Number(num);
         const pokemonResult = await getUnityPokemon(num2);
+
         list.push(pokemonResult);
       }
     } catch (error) {
@@ -41,11 +49,22 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // Chama getTypes quando pokemons é atualizado
     if (pokemons.length > 0) {
       getTypes();
     }
   }, [pokemons]);
+
+  const getPokemonJohto = async () => {
+    try {
+      if (!johto) {
+        const pkmnsApi = await getPokemonsJohto();
+        setPokemons((prevPokemons) => [...prevPokemons, ...pkmnsApi]);
+        setJohto(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   function populaPkmn() {
     const pkmns = pokemonsTypes.map((pokemon: PokemonAPI) => {
@@ -58,6 +77,7 @@ export default function Home() {
           name={nameCapitalize}
           abilities={pokemon.abilities}
           types={pokemon.types}
+          sprites={pokemon.sprites}
         />
       );
     });
@@ -70,6 +90,14 @@ export default function Home() {
       <div className="pkmns">
         {pokemonsTypes.length === 0 ? <p>Carregando...</p> : populaPkmn()}
       </div>
+      {/* {(pokemonsTypes.length > 0 && !johto) && <button onClick={getPokemonJohto}>Carregar mais</button>}
+      {(pokemonsTypes.length > 251 && !hoenn) && <button>Carregar mais</button>}
+      {(pokemonsTypes.length > 386 && !sinnoh) && <button>Carregar mais</button>}
+      {(pokemonsTypes.length > 493 && !unova) && <button>Carregar mais</button>}
+      {(pokemonsTypes.length > 649 && !kalos) && <button>Carregar mais</button>}
+      {(pokemonsTypes.length > 721 && !alola) && <button>Carregar mais</button>}
+      {(pokemonsTypes.length > 809 && !galar) && <button>Carregar mais</button>}
+      {(pokemonsTypes.length > 905 && !paldea) && <button>Carregar mais</button>} */}
     </div>
   );
 }

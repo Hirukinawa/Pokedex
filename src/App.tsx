@@ -13,8 +13,9 @@ export interface Pokemon {
 export interface PokemonAPI {
   id: number;
   name: string;
-  types: TypeSlot[];
+  types: TypeSlotType[];
   abilities: Abilities[];
+  sprites: string[];
 }
 
 export interface PokemonResult {
@@ -22,7 +23,7 @@ export interface PokemonResult {
   url: string;
 }
 
-export interface TypeSlot {
+export interface TypeSlotType {
   slot: number;
   type: Type;
 }
