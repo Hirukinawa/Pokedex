@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { PokemonAPI, TypeSlotType } from "../../App";
 import "../../App.css";
 import TypeSlot from "../TypeSlot";
 
 const PokemonDetails: React.FC = () => {
+  const [shiny, setShiny] = useState(false)
   const location = useLocation();
   const pokemon: PokemonAPI = location.state?.pokemon || {
     id: 0,
@@ -23,7 +24,8 @@ const PokemonDetails: React.FC = () => {
     }
   }
 
-  const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
+  //const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
+  //const link = shiny ? pokemon.sprites.other.home.front_shiny : pokemon.sprites.other.home.front_default
 
   function types() {
     const types = pokemon.types.map((typeSlot: TypeSlotType) => {
@@ -34,6 +36,8 @@ const PokemonDetails: React.FC = () => {
     return types;
   }
 
+  const handleChange = () => setShiny(!shiny)
+
   return (
     <div className="bgWhite">
       <h1>
@@ -41,8 +45,12 @@ const PokemonDetails: React.FC = () => {
       </h1>
       <div className="row">
         <div className="column">
+          <label htmlFor="">
+          <input type="checkbox" onChange={handleChange} />
+          Shiny
+          </label>
           <img
-            src={link}
+            src={shiny ? pokemon.sprites.other.home.front_shiny : pokemon.sprites.other.home.front_default}
             width="450px"
             height="auto"
             alt={`${pokemon.name} - ${pokeNumber}`}

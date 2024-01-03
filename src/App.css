@@ -34,7 +34,7 @@ html {
 }
 
 .card {
-    width: 185px;
+    width: 180px;
     height: 200px;
     margin: 13px;
     padding: 6px;
@@ -42,7 +42,8 @@ html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    box-shadow: 2.5px 2.5px 5px grey;
+    box-shadow: 2.5px 2.5px 5px black;
+    border: 1px solid rgb(55, 55, 55);
     border-radius: 6px;
 }
 

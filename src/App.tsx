@@ -15,7 +15,22 @@ export interface PokemonAPI {
   name: string;
   types: TypeSlotType[];
   abilities: Abilities[];
-  sprites: string[];
+  sprites: Sprites;
+}
+
+export interface Sprites {
+  front_default: string;
+  front_shiny:string;
+  other: OtherSprites;
+};
+
+export interface OtherSprites {
+  home: Home;
+}
+
+export interface Home {
+  front_default: string;
+  front_shiny: string;
 }
 
 export interface PokemonResult {

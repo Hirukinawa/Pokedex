@@ -17,7 +17,7 @@ export default function Card(pokemon: PokemonAPI) {
       return `${num}`;
     }
   }
-  const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
+  //const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
 
   const onHandleClick = () => {
     navigate(`/pokemon/${pokemon.id}`, { state: { pokemon } });
@@ -34,7 +34,7 @@ export default function Card(pokemon: PokemonAPI) {
     <>
       <div onClick={onHandleClick} className="card">
         <div className="image">
-          <img src={link} width="110px" height="110px" />
+          <img src={pokemon.sprites.other.home.front_default} width="110px" height="110px" />
         </div>
         <p>
           <b>
