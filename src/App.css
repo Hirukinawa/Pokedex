@@ -44,6 +44,14 @@ html {
     flex-direction: row;
     justify-content: space-around;
 }
+
+.rowTypes {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    flex-wrap: wrap;
+}
+
 .column {
     display: flex;
     flex-direction: column;

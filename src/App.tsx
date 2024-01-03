@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import "./App.css";
 import { BrowserRouter as Router } from "react-router-dom";
-//import PokemonDetails from "./components/pages/PokemonDetails";
-//import Home from "./components/pages/Home";
-//import { Link } from "react-router-dom";
 
 export interface Pokemon {
   id: number;
@@ -16,10 +13,6 @@ export interface PokemonAPI {
   types: TypeSlotType[];
   abilities: AbilitySlot[];
   sprites: Sprites;
-}
-
-export interface Specie {
-  varieties: [];
 }
 
 export interface Sprites {
@@ -48,8 +41,22 @@ export interface TypeSlotType {
 }
 
 export interface Type {
+  id: number;
   name: string;
   url: string;
+}
+
+export interface TypeDamage {
+  damage_relations: DamageRelation;
+}
+
+export interface DamageRelation {
+  double_damage_from: Type[];
+  half_damage_from: Type[];
+  no_damage_from: Type[];
+  double_damage_to: Type[];
+  half_damage_to: Type[];
+  no_damage_to: Type[];
 }
 
 export interface AbilitySlot {
