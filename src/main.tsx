@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/pokemon/:id", // Use o parâmetro dinâmico :id
+    path: "/pokemon/:id",
     element: <PokemonDetails />,
   },
 ]);

@@ -5,7 +5,7 @@ const apiUrl = "https://pokeapi.co/api/v2";
 
 export async function getPokemons() {
   try {
-    const response = await axios.get(`${apiUrl}/pokemon?limit=151`);
+    const response = await axios.get(`${apiUrl}/pokemon?limit=150`);
     const data = response.data;
     const results: [] = data.results;
     return results;
@@ -26,28 +26,27 @@ export async function getUnityPokemon(num: number) {
   }
 }
 
-export async function getPokemonsJohto() {
+export async function getMorePokemonAPI() {
   try {
-    const response = await axios.get(`${apiUrl}/pokemon?limit=100`);
+    const response = await axios.get(`${apiUrl}/pokemon?limit=30`);
     const data = response.data;
-    //const species: [] = data.pokemon_species;
     const results: [] = data.results;
     //return species;
     return results;
   } catch (error) {
     console.error(error);
-    throw new Error("Erro ao obter dados dos Pokémon de Johto");
+    throw new Error("Erro ao obter dados de mais Pokémon");
   }
 }
 
-export async function getPokemonsHoenn() {
+export async function getUrlResult(url: string) {
   try {
-    const response = await axios.get(`${apiUrl}/pokemon?limit=135`);
+    const response = await axios.get(url);
     const data = response.data;
-    const results: [] = data.results;
-    return results;
+    //console.log(data);
+    return data;
   } catch (error) {
     console.log(error);
-    throw new Error("Erro ao obter dados dos Pokémon de Hoenn");
+    throw new Error("Erro ao obter dados da habilidade");
   }
 }

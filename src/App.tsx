@@ -14,15 +14,19 @@ export interface PokemonAPI {
   id: number;
   name: string;
   types: TypeSlotType[];
-  abilities: Abilities[];
+  abilities: AbilitySlot[];
   sprites: Sprites;
+}
+
+export interface Specie {
+  varieties: [];
 }
 
 export interface Sprites {
   front_default: string;
-  front_shiny:string;
+  front_shiny: string;
   other: OtherSprites;
-};
+}
 
 export interface OtherSprites {
   home: Home;
@@ -48,7 +52,7 @@ export interface Type {
   url: string;
 }
 
-export interface Abilities {
+export interface AbilitySlot {
   slot: number;
   ability: Ability;
   is_hidden: boolean;
@@ -57,6 +61,20 @@ export interface Abilities {
 export interface Ability {
   name: string;
   url: string;
+}
+
+export interface AbilityDescription {
+  name: string;
+  effect_entries: Entries[];
+}
+
+export interface Entries {
+  effect: string;
+  language: Language;
+}
+
+export interface Language {
+  name: string;
 }
 
 export default function App() {

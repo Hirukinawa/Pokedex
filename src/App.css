@@ -2,6 +2,22 @@ html {
     background-color: rgb(55, 55, 55);
 }
 
+.loadMore {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    min-width: 10vw;
+    width: 15vw;
+    max-width: 25vw;
+    height: 5vh;
+    border: none;
+    background-color: blue;
+    color: white;
+    font-size: 18px;
+    border-radius: 8px;
+}
+
 .bgWhite {
     display: flex;
     flex-direction: column;
@@ -34,7 +50,7 @@ html {
 }
 
 .card {
-    width: 180px;
+    width: 179px;
     height: 200px;
     margin: 13px;
     padding: 6px;

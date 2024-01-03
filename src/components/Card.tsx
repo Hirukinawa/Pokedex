@@ -17,7 +17,8 @@ export default function Card(pokemon: PokemonAPI) {
       return `${num}`;
     }
   }
-  //const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
+  const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
+  //pokemon.sprites.other.home.front_default
 
   const onHandleClick = () => {
     navigate(`/pokemon/${pokemon.id}`, { state: { pokemon } });
@@ -25,7 +26,7 @@ export default function Card(pokemon: PokemonAPI) {
 
   function types() {
     const types = pokemon.types.map((typeSlot: TypeSlotType) => {
-      return <TypeSlot name={typeSlot.type.name.toUpperCase()}/>;
+      return <TypeSlot name={typeSlot.type.name.toUpperCase()} />;
     });
     return types;
   }
@@ -34,7 +35,7 @@ export default function Card(pokemon: PokemonAPI) {
     <>
       <div onClick={onHandleClick} className="card">
         <div className="image">
-          <img src={pokemon.sprites.other.home.front_default} width="110px" height="110px" />
+          <img src={link} width="110px" height="110px" />
         </div>
         <p>
           <b>
