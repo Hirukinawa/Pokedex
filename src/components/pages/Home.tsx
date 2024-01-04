@@ -8,8 +8,10 @@ import {
   getMorePokemonAPI,
   getUnityPokemon,
 } from "../../service/Axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
   const [pokemons, setPokemons] = useState<PokemonResult[]>([]);
   const [pokemonsUnity, setPokemonsUnity] = useState<PokemonAPI[]>([]);
 
@@ -83,9 +85,18 @@ export default function Home() {
     return pkmns;
   }
 
+  const onHandleClick = () => {
+    navigate(`/usuarios`);
+  };
+
   return (
     <div className="bgWhite">
-      <h1>Pokédex foda</h1>
+      <div className="row">
+        <h1>Pokédex foda</h1>
+        <button className="loadMore" onClick={onHandleClick}>
+          Usuários
+        </button>
+      </div>
       <div className="pkmns">
         {pokemonsUnity.length === 0 ? <p>Carregando...</p> : populaPkmn()}
       </div>

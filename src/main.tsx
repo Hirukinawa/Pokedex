@@ -7,6 +7,7 @@ import Home from "./components/pages/Home.tsx";
 import PokemonDetails from "./components/pages/PokemonDetails.tsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Users from "./components/pages/Usuarios.tsx";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
   {
     path: "/pokemon/:id",
     element: <PokemonDetails />,
+  },
+  {
+    path: "/usuarios",
+    element: <Users />,
   },
 ]);
 

@@ -84,6 +84,17 @@ export interface Language {
   name: string;
 }
 
+export interface ApiList {
+  users: ApiUser[];
+}
+
+export interface ApiUser {
+  id: number;
+  name: string;
+  avatar: string;
+  city: string;
+}
+
 export default function App() {
   return <Router></Router>;
 }

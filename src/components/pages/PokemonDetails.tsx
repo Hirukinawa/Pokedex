@@ -121,7 +121,6 @@ const PokemonDetails: React.FC = () => {
   }
 
   const getWeakness = doubleTo.map((weak: Type) => {
-    console.log(doubleTo.length);
     let types = null;
     if (!halfTo.some((item) => item.name === weak.name)) {
       types = <TypeSlot name={weak.name.toUpperCase()} />;

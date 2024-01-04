@@ -2,6 +2,7 @@
 import axios from "axios";
 
 const apiUrl = "https://pokeapi.co/api/v2";
+const apiLink = "http://localhost:5500/api";
 
 export async function getPokemons() {
   try {
@@ -49,3 +50,43 @@ export async function getUrlResult(url: string) {
     throw new Error("Erro ao obter dados da habilidade");
   }
 }
+export async function getUsers() {
+  try {
+    const response = await axios.get(apiLink);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Deu erro");
+  }
+}
+
+export async function postUser(name: string, avatar: string, city: string) {
+  const newUser = {
+    name: name,
+    avatar: avatar,
+    city: city,
+  };
+  axios
+    .post(apiLink, newUser)
+    .then()
+    .catch((error) => console.log(error));
+}
+
+export async function updateUser(
+  id: number,
+  name: string,
+  avatar: string,
+  city: string
+) {
+  const newUser = {
+    name: name,
+    avatar: avatar,
+    city: city,
+  };
+  axios.put(`${apiLink}/${id}`, newUser);
+}
+
+// export async function deleteUser(id: number) {
+//   axios.delete(apiLink, id)
+// }
