@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
-import { postUser, getUsers, updateUser } from "../../service/Axios";
+import {
+  postUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+} from "../../service/Axios";
 import { ApiList, ApiUser } from "../../App";
 
 export default function Users() {
@@ -10,8 +15,14 @@ export default function Users() {
   }
 
   const [form, setForm] = useState<Formulario>({ name: "", city: "" });
-  const [formPost, setFormPost] = useState<Formulario>({ name: "", city: "" });
+
+  const [formPut, setFormPut] = useState<Formulario>({ name: "", city: "" });
+
   const [apiUsers, setApiUsers] = useState<ApiList>();
+
+  const [inpPut, setInpPut] = useState(0);
+
+  const [inpDel, setInpDel] = useState(0);
 
   useEffect(() => {
     getUsersApi();
@@ -26,22 +37,45 @@ export default function Users() {
     }
   };
 
-  const onHandleSubmit = async () => {
+  async function onHandleSubmit() {
     await postUser(form.name, "http://lorempixel.com.br/100/100", form.city);
 
     setForm({ name: "", city: "" });
-  };
+  }
 
-  const onHandleUpdate = async () => {
-    await updateUser(
-      2,
-      form.name,
-      "http://lorempixel.com.br/100/100",
-      form.city
-    );
+  async function onHandleUpdate(event: React.ChangeEvent<HTMLFormElement>) {
+    let confirmaPut: number = 0;
+    for (let i = 0; i < apiUsers!.users.length; i++) {
+      if (inpPut === apiUsers?.users[i].id) {
+        confirmaPut = 1;
+        await updateUser(
+          inpPut,
+          formPut.name,
+          "http://lorempixel.com.br/100/100",
+          formPut.city
+        );
+      }
+    }
+    if (confirmaPut === 0) {
+      event.preventDefault;
+      alert("Usuário não encontrado");
+    }
+    setFormPut({ name: "", city: "" });
+  }
 
-    setFormPost({ name: "", city: "" });
-  };
+  async function onHandleDelete(event: React.ChangeEvent<HTMLFormElement>) {
+    let confirmaPut: number = 0;
+    for (let i = 0; i < apiUsers!.users.length; i++) {
+      if (inpDel === apiUsers?.users[i].id) {
+        confirmaPut = 1;
+        await deleteUser(inpDel);
+      }
+    }
+    if (confirmaPut === 0) {
+      event.preventDefault;
+      alert("Usuário não encontrado");
+    }
+  }
 
   const takeUsers = apiUsers?.users.map((user: ApiUser) => {
     return (
@@ -59,19 +93,28 @@ export default function Users() {
 
   const trocaName = (event: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, name: event.target.value });
+
   const trocaCity = (event: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, city: event.target.value });
-  const trocaNamePost = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setForm({ ...form, name: event.target.value });
-  const trocaCityPost = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setForm({ ...form, city: event.target.value });
+
+  const trocaNamePut = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setFormPut({ ...formPut, name: event.target.value });
+
+  const trocaCityPut = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setFormPut({ ...formPut, city: event.target.value });
+
+  const trocaInputPut = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setInpPut(Number(event.target.value));
+
+  const trocaInputDelete = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setInpDel(Number(event.target.value));
 
   return (
     <div className="bgWhite">
       <div className="row">
         <div className="column">
           <h1>Cadastrar</h1>
-          <form className="column">
+          <form onSubmit={onHandleSubmit} className="column">
             <label>
               Nome:
               <input
@@ -90,20 +133,18 @@ export default function Users() {
                 required
               />
             </label>
-            <button type="submit" onClick={onHandleSubmit}>
-              Enviar
-            </button>
+            <button type="submit">Enviar</button>
           </form>
         </div>
         <div className="column">
           <h1>Atualizar</h1>
-          <form className="column">
+          <form onSubmit={onHandleUpdate} className="column">
             <label>
               Nome:
               <input
                 type="text"
-                value={formPost.name}
-                onChange={trocaNamePost}
+                value={formPut.name}
+                onChange={trocaNamePut}
                 required
               />
             </label>
@@ -111,25 +152,39 @@ export default function Users() {
               Cidade:
               <input
                 type="text"
-                value={formPost.city}
-                onChange={trocaCityPost}
+                value={formPut.city}
+                onChange={trocaCityPut}
                 required
               />
             </label>
-            <button type="submit" onClick={onHandleUpdate}>
-              Atualizar
-            </button>
+            <label>
+              Número de usuário:
+              <input
+                type="number"
+                value={inpPut}
+                onChange={trocaInputPut}
+                step={1}
+                min={1}
+              />
+            </label>
+            <button type="submit">Atualizar</button>
           </form>
         </div>
         <div className="column">
           <h1>Deletar</h1>
-          <label>
-            Número de usuário:
-            <input type="number" name="" id="" />
-          </label>
-          <button type="submit" onClick={onHandleUpdate}>
-            Deletar
-          </button>
+          <form onSubmit={onHandleDelete} className="column">
+            <label>
+              Número de usuário:
+              <input
+                type="number"
+                value={inpDel}
+                onChange={trocaInputDelete}
+                step={1}
+                min={1}
+              />
+            </label>
+            <button type="submit">Deletar</button>
+          </form>
         </div>
       </div>
       <h1>Usuários cadastrados</h1>

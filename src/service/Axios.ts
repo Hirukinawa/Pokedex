@@ -84,9 +84,13 @@ export async function updateUser(
     avatar: avatar,
     city: city,
   };
-  axios.put(`${apiLink}/${id}`, newUser);
+  return axios.put(`${apiLink}/${id}`, newUser).then((response) => {
+    return response.data;
+  });
 }
 
-// export async function deleteUser(id: number) {
-//   axios.delete(apiLink, id)
-// }
+export async function deleteUser(id: number) {
+  return axios.delete(`${apiLink}/${id}`).then((response) => {
+    return response.data;
+  });
+}
