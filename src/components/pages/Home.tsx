@@ -14,6 +14,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [pokemons, setPokemons] = useState<PokemonResult[]>([]);
   const [pokemonsUnity, setPokemonsUnity] = useState<PokemonAPI[]>([]);
+  const firstPokemon = 1;
 
   const getPokemon = async () => {
     try {
@@ -28,7 +29,7 @@ export default function Home() {
     const list: PokemonAPI[] = [];
     try {
       for (let i = 0; i < pokemons.length; i++) {
-        const pokemonResult = await getUnityPokemon(i + 1);
+        const pokemonResult = await getUnityPokemon(i + firstPokemon);
         list.push(pokemonResult);
       }
     } catch (error) {
@@ -58,7 +59,9 @@ export default function Home() {
           const str1 = pk.url.replace("https://pokeapi.co/api/v2/pokemon/", "");
           const str2 = str1.replace("/", "");
           const num = Number(str2);
-          const pokemonRes = await getUnityPokemon(num + pokemonsUnity.length);
+          const pokemonRes = await getUnityPokemon(
+            num + pokemonsUnity.length + firstPokemon - 1
+          );
 
           list.push(pokemonRes);
         }

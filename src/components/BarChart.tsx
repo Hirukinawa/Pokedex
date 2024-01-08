@@ -1,34 +1,42 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import ReactApexChart from "react-apexcharts";
+import { Status, formataName } from "../App";
 
-interface BarChartProps {}
+interface BarChartProps {
+  stats: Status[];
+}
 
-const BarChart: React.FC<BarChartProps> = () => {
+const BarChart: React.FC<BarChartProps> = ({ stats }: BarChartProps) => {
   const chartOptions = {
+    // Define your chart options here
+    chart: {
+      type: "line",
+    },
     series: [
       {
-        name: "Series 1",
-        data: [30, 40, 35, 50, 49, 60, 70, 91, 125],
+        name: "",
+        data: stats.map((stat: Status) => {
+          return stat.base_stat;
+        }),
       },
     ],
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-      ],
+      categories: stats.map((stat: Status) => {
+        return formataName(stat.stat.name);
+      }),
     },
   };
 
   return (
     <div>
-      <ReactApexChart series={chartOptions.series} height={350} />
+      <ReactApexChart
+        options={chartOptions}
+        series={chartOptions.series}
+        type="bar"
+        height={250}
+        width={425}
+      />
     </div>
   );
 };

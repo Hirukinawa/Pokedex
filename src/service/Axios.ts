@@ -49,7 +49,6 @@ export async function getUrlResult(url: string) {
     const data = response.data;
     return data;
   } catch (error) {
-    alert(error);
     console.log(error);
     throw new Error("Erro ao obter dados da habilidade");
   }

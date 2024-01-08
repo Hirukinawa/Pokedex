@@ -3,11 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   AbilityDescription,
+  Move,
+  MoveAPI,
+  MoveSlotMove,
   PokeList,
   PokemonAPI,
   Type,
   TypeDamage,
   TypeSlotType,
+  formataName,
 } from "../../App";
 import "../../App.css";
 import TypeSlot from "../TypeSlot";
@@ -18,21 +22,29 @@ import {
   postFavPokemon,
 } from "../../service/Axios";
 import BarChart from "../BarChart";
+import MoveSlot from "../MoveSlot";
 
 const PokemonDetails: React.FC = () => {
-  const [shiny, setShiny] = useState(false);
-  const [favorite, setFavorite] = useState(false);
-  const [favPoke, setFavPoke] = useState<PokeList>();
-  const [entries, setEntries] = useState<AbilityDescription[]>([]);
-  const [fraquezas, setFraquezas] = useState<TypeDamage[]>([]);
-  const [vantagens, setVantagens] = useState<Type[]>([]);
-  const [doubleTo, setDoubleTo] = useState<Type[]>([]);
-  const [halfTo, setHalfTo] = useState<Type[]>([]);
   const location = useLocation();
   const pokemon: PokemonAPI = location.state?.pokemon || {
     id: 0,
     name: "Unknown",
   };
+
+  const [shiny, setShiny] = useState(false);
+  const [favorite, setFavorite] = useState(false);
+
+  const [favPoke, setFavPoke] = useState<PokeList>();
+
+  const [pokeMoves, setPokeMoves] = useState<MoveAPI[]>([]);
+
+  const [entries, setEntries] = useState<AbilityDescription[]>([]);
+
+  const [fraquezas, setFraquezas] = useState<TypeDamage[]>([]);
+  const [vantagens, setVantagens] = useState<Type[]>([]);
+
+  const [doubleTo, setDoubleTo] = useState<Type[]>([]);
+  const [halfTo, setHalfTo] = useState<Type[]>([]);
 
   const pokeNumber = formataNumber(pokemon.id);
 
@@ -46,7 +58,19 @@ const PokemonDetails: React.FC = () => {
     }
   }
 
+  const getMoves = async () => {
+    const movePoke: MoveAPI[] = [];
+    await Promise.all(
+      pokemon.moves.map(async (move: MoveSlotMove) => {
+        const moveApi = await getUrlResult(move.move.url);
+        movePoke.push(moveApi);
+      })
+    );
+    setPokeMoves(movePoke);
+  };
+
   useEffect(() => {
+    getMoves();
     getDescriptions();
     getFraquezas();
     getFav();
@@ -121,6 +145,8 @@ const PokemonDetails: React.FC = () => {
       types: pokemon.types,
       abilities: pokemon.abilities,
       sprites: pokemon.sprites,
+      stats: pokemon.stats,
+      moves: pokemon.moves,
     };
     if (favorite === false) {
       await postFavPokemon(poke);
@@ -179,8 +205,6 @@ const PokemonDetails: React.FC = () => {
   });
 
   const getEntries = entries.map((ent) => {
-    const str1 = ent.name.charAt(0).toUpperCase() + ent.name.slice(1);
-    const str2 = str1.replace("-", " ");
     let ind: number = 0;
     for (let i = 0; i < ent.effect_entries.length; i++) {
       if (ent.effect_entries[i].language.name === "en") {
@@ -189,9 +213,16 @@ const PokemonDetails: React.FC = () => {
     }
     return (
       <p>
-        <b>{str2}</b>: {ent.effect_entries[ind].effect}
+        <b>{formataName(ent.name)}</b>:{" "}
+        {ent.effect_entries.length > 0
+          ? ent.effect_entries[ind].effect
+          : "No data."}
       </p>
     );
+  });
+
+  const getPokeMoves = pokeMoves.map((move: MoveAPI) => {
+    return <MoveSlot name={move.name} />;
   });
 
   return (
@@ -200,46 +231,54 @@ const PokemonDetails: React.FC = () => {
         {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} -{" "}
         {pokeNumber}
       </h1>
-      <div className="row">
-        <div className="column">
-          <label htmlFor="">
-            <input type="checkbox" onChange={handleChange} />
-            Shiny
-          </label>
-          <img
-            src={
-              shiny
-                ? pokemon.sprites.other.home.front_shiny
-                : pokemon.sprites.other.home.front_default
-            }
-            width="450px"
-            height="auto"
-            alt={`${pokemon.name} - ${pokeNumber}`}
-          />
-          <div className="row">{types()}</div>
-        </div>
-        <div className="column">
-          <button onClick={handleFav}>
-            {favorite === false ? "Favoritar" : "Desfavoritar"}
-          </button>
-          <h2>Descrição</h2>
-          <p>
-            O Pokémon faz coisas que um Pokémon deveria fazer, já que ele é um
-            Pokémon.
-          </p>
-          <h2>Habilidades</h2>
-          {getEntries}
-          <h2>Vantagens</h2>
-          <div className="rowTypes">
-            {vantagens.length > 0 ? getResis : "Carregando..."}
+      <div className="column">
+        <div className="row">
+          <div className="column">
+            <label htmlFor="">
+              <input type="checkbox" onChange={handleChange} />
+              Shiny
+            </label>
+            <img
+              src={
+                shiny
+                  ? pokemon.sprites.other.home.front_shiny
+                  : pokemon.sprites.other.home.front_default
+              }
+              width="450px"
+              height="auto"
+              alt={`${pokemon.name} - ${pokeNumber}`}
+            />
+            <div className="row">{types()}</div>
+            <BarChart stats={pokemon.stats} />
           </div>
-          <h2>Fraquezas</h2>
-          <div className="rowTypes">
-            {doubleTo.length > 0 ? getWeakness : "Carregando..."}
+          <div className="column">
+            <button className="loadMore" onClick={handleFav}>
+              {favorite === false ? "Favoritar" : "Desfavoritar"}
+            </button>
+            <h2>Descrição</h2>
+            <p>
+              O Pokémon faz coisas que um Pokémon deveria fazer, já que ele é um
+              Pokémon.
+            </p>
+            <h2>Habilidades</h2>
+            {getEntries}
+            <h2>Vantagens</h2>
+            <div className="rowTypes">
+              {vantagens.length > 0
+                ? getResis
+                : vantagens.length < 1
+                ? "Não possui"
+                : "Carregando..."}
+            </div>
+            <h2>Fraquezas</h2>
+            <div className="rowTypes">
+              {doubleTo.length > 0 ? getWeakness : "Carregando..."}
+            </div>
           </div>
         </div>
+        <h2>Movimentos</h2>
+        {getPokeMoves}
       </div>
-      {/* <BarChart /> */}
     </div>
   );
 };
