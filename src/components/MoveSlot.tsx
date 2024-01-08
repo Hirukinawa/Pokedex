@@ -7,8 +7,13 @@ interface MoveSlotProps {
 
 const MoveSlot: React.FC<MoveSlotProps> = ({ name }) => {
   return (
-    <div>
-      <p>{formataName(name)}</p>
+    <div className="column">
+      <div className="move">
+        <p>
+          <b>{formataName(name)}</b>
+        </p>
+      </div>
+      <p></p>
     </div>
   );
 };

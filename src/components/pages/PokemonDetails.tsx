@@ -8,6 +8,7 @@ import {
   MoveSlotMove,
   PokeList,
   PokemonAPI,
+  Status,
   Type,
   TypeDamage,
   TypeSlotType,
@@ -139,6 +140,7 @@ const PokemonDetails: React.FC = () => {
   const handleChange = () => setShiny(!shiny);
 
   const handleFav = async () => {
+    const mom: MoveSlotMove[] = [];
     const poke: PokemonAPI = {
       id: pokemon.id,
       name: pokemon.name,
@@ -146,7 +148,7 @@ const PokemonDetails: React.FC = () => {
       abilities: pokemon.abilities,
       sprites: pokemon.sprites,
       stats: pokemon.stats,
-      moves: pokemon.moves,
+      moves: mom,
     };
     if (favorite === false) {
       await postFavPokemon(poke);

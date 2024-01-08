@@ -89,6 +89,16 @@ html {
     justify-content: center;
 }
 
+.move {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px gray solid;
+    border-bottom: 1px gray solid;
+    width: 90%;
+}
+
 .typeDetails {
     width: 50%;
     height: auto;
