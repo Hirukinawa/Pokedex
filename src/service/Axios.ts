@@ -1,30 +1,32 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from "axios";
+import { PokemonAPI } from "../App";
 
 const apiUrl = "https://pokeapi.co/api/v2";
 const apiLink = "http://localhost:5500/api";
 
 export async function getPokemons() {
   try {
-    const response = await axios.get(`${apiUrl}/pokemon?limit=10`);
+    const response = await axios.get(`${apiUrl}/pokemon?limit=30`);
     const data = response.data;
     const results: [] = data.results;
     return results;
   } catch (error) {
-    console.error(error);
+    alert(error);
+    console.log(error);
     throw new Error("Erro ao obter dados dos Pokémon");
   }
 }
 
 export async function getMorePokemonAPI() {
   try {
-    const response = await axios.get(`${apiUrl}/pokemon?limit=30`);
+    const response = await axios.get(`${apiUrl}/pokemon?limit=70`);
     const data = response.data;
     const results: [] = data.results;
-    //return species;
     return results;
   } catch (error) {
-    console.error(error);
+    alert(error);
+    console.log(error);
     throw new Error("Erro ao obter dados de mais Pokémon");
   }
 }
@@ -35,7 +37,8 @@ export async function getUnityPokemon(num: number) {
     const data = response.data;
     return data;
   } catch (error) {
-    console.error(error);
+    alert(error);
+    console.log(error);
     throw new Error("Erro ao obter dados do Pokémon");
   }
 }
@@ -46,51 +49,43 @@ export async function getUrlResult(url: string) {
     const data = response.data;
     return data;
   } catch (error) {
+    alert(error);
     console.log(error);
     throw new Error("Erro ao obter dados da habilidade");
   }
 }
-export async function getUsers() {
+
+export async function getFavPokemons() {
   try {
     const response = await axios.get(apiLink);
     const data = response.data;
     return data;
   } catch (error) {
+    alert(error);
     console.log(error);
-    throw new Error("Deu erro");
+    throw new Error("Erro ao obter pokemon favoritos");
   }
 }
 
-export async function postUser(name: string, avatar: string, city: string) {
-  const newUser = {
-    name: name,
-    avatar: avatar,
-    city: city,
-  };
+export async function postFavPokemon(pokemon: PokemonAPI) {
   axios
-    .post(apiLink, newUser)
+    .post(apiLink, pokemon)
     .then()
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      alert(error);
+      console.log(error);
+      throw new Error("Erro ao favoritar pokémon");
+    });
 }
 
-export async function updateUser(
-  id: number,
-  name: string,
-  avatar: string,
-  city: string
-) {
-  const newUser = {
-    name: name,
-    avatar: avatar,
-    city: city,
-  };
-  return axios.put(`${apiLink}/${id}`, newUser).then((response) => {
-    return response.data;
-  });
-}
-
-export async function deleteUser(id: number) {
-  return axios.delete(`${apiLink}/${id}`).then((response) => {
-    return response.data;
-  });
+export async function deleteFavPokemon(id: number) {
+  return axios
+    .delete(`${apiLink}/${id}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      alert(error);
+      console.log(error);
+    });
 }

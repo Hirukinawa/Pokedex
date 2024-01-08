@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { PokemonAPI, PokemonResult } from "../../App";
 import Card from "../Card";
-import "../../App.css";
 import { useEffect, useState } from "react";
 import {
   getPokemons,
@@ -9,6 +8,7 @@ import {
   getUnityPokemon,
 } from "../../service/Axios";
 import { useNavigate } from "react-router-dom";
+import "../../App.css";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -53,13 +53,15 @@ export default function Home() {
       const pkmnsApi = await getMorePokemonAPI();
 
       for (let i = 0; i < pkmnsApi.length; i++) {
-        const pk: PokemonResult = pkmnsApi[i];
-        const str1 = pk.url.replace("https://pokeapi.co/api/v2/pokemon/", "");
-        const str2 = str1.replace("/", "");
-        const num = Number(str2);
-        const pokemonRes = await getUnityPokemon(num + pokemonsUnity.length);
+        if (pokemonsUnity.length + list.length < 1025) {
+          const pk: PokemonResult = pkmnsApi[i];
+          const str1 = pk.url.replace("https://pokeapi.co/api/v2/pokemon/", "");
+          const str2 = str1.replace("/", "");
+          const num = Number(str2);
+          const pokemonRes = await getUnityPokemon(num + pokemonsUnity.length);
 
-        list.push(pokemonRes);
+          list.push(pokemonRes);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -69,18 +71,7 @@ export default function Home() {
 
   function populaPkmn() {
     const pkmns = pokemonsUnity.map((pokemon: PokemonAPI) => {
-      const nameCapitalize =
-        pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-      return (
-        <Card
-          key={pokemon.id}
-          id={pokemon.id}
-          name={nameCapitalize}
-          abilities={pokemon.abilities}
-          types={pokemon.types}
-          sprites={pokemon.sprites}
-        />
-      );
+      return <Card key={pokemon.id} fav={false} pokemon={pokemon} />;
     });
     return pkmns;
   }
@@ -94,13 +85,13 @@ export default function Home() {
       <div className="row">
         <h1>Pokédex foda</h1>
         <button className="loadMore" onClick={onHandleClick}>
-          Usuários
+          Favoritos
         </button>
       </div>
       <div className="pkmns">
         {pokemonsUnity.length === 0 ? <p>Carregando...</p> : populaPkmn()}
       </div>
-      {pokemonsUnity.length > 0 && (
+      {pokemonsUnity.length > 0 && pokemonsUnity.length < 1025 && (
         <button className="loadMore" onClick={getMorePokemon}>
           <p>Carregar mais</p>
         </button>

@@ -15,6 +15,10 @@ export interface PokemonAPI {
   sprites: Sprites;
 }
 
+export interface PokeList {
+  pkmnsFav: PokemonAPI[];
+}
+
 export interface Sprites {
   front_default: string;
   front_shiny: string;

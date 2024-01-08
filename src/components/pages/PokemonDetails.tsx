@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   AbilityDescription,
+  PokeList,
   PokemonAPI,
   Type,
   TypeDamage,
@@ -10,10 +11,18 @@ import {
 } from "../../App";
 import "../../App.css";
 import TypeSlot from "../TypeSlot";
-import { getUrlResult } from "../../service/Axios";
+import {
+  deleteFavPokemon,
+  getFavPokemons,
+  getUrlResult,
+  postFavPokemon,
+} from "../../service/Axios";
+import BarChart from "../BarChart";
 
 const PokemonDetails: React.FC = () => {
   const [shiny, setShiny] = useState(false);
+  const [favorite, setFavorite] = useState(false);
+  const [favPoke, setFavPoke] = useState<PokeList>();
   const [entries, setEntries] = useState<AbilityDescription[]>([]);
   const [fraquezas, setFraquezas] = useState<TypeDamage[]>([]);
   const [vantagens, setVantagens] = useState<Type[]>([]);
@@ -40,11 +49,29 @@ const PokemonDetails: React.FC = () => {
   useEffect(() => {
     getDescriptions();
     getFraquezas();
+    getFav();
   }, []);
 
   useEffect(() => {
     getResistencias();
   }, [fraquezas]);
+
+  useEffect(() => {
+    isFav();
+  }, [favPoke]);
+
+  const isFav = () => {
+    favPoke?.pkmnsFav.map((poke: PokemonAPI) => {
+      if (pokemon.id === poke.id) {
+        setFavorite(true);
+      }
+    });
+  };
+
+  const getFav = async () => {
+    const response = await getFavPokemons();
+    setFavPoke(response);
+  };
 
   const getDescriptions = async () => {
     const list: AbilityDescription[] = [];
@@ -78,12 +105,31 @@ const PokemonDetails: React.FC = () => {
 
   function types() {
     const types = pokemon.types.map((typeSlot: TypeSlotType) => {
-      return <TypeSlot name={typeSlot.type.name.toUpperCase()} />;
+      return (
+        <TypeSlot key={typeSlot.slot} name={typeSlot.type.name.toUpperCase()} />
+      );
     });
     return types;
   }
 
   const handleChange = () => setShiny(!shiny);
+
+  const handleFav = async () => {
+    const poke: PokemonAPI = {
+      id: pokemon.id,
+      name: pokemon.name,
+      types: pokemon.types,
+      abilities: pokemon.abilities,
+      sprites: pokemon.sprites,
+    };
+    if (favorite === false) {
+      await postFavPokemon(poke);
+      setFavorite(true);
+    } else {
+      await deleteFavPokemon(pokemon.id);
+      setFavorite(false);
+    }
+  };
 
   function getResistencias() {
     const resistencias: Type[] = [];
@@ -123,13 +169,13 @@ const PokemonDetails: React.FC = () => {
   const getWeakness = doubleTo.map((weak: Type) => {
     let types = null;
     if (!halfTo.some((item) => item.name === weak.name)) {
-      types = <TypeSlot name={weak.name.toUpperCase()} />;
+      types = <TypeSlot key={weak.id} name={weak.name.toUpperCase()} />;
     }
     return types;
   });
 
   const getResis = vantagens.map((type: Type) => {
-    return <TypeSlot name={type.name.toUpperCase()} />;
+    return <TypeSlot key={type.id} name={type.name.toUpperCase()} />;
   });
 
   const getEntries = entries.map((ent) => {
@@ -151,7 +197,8 @@ const PokemonDetails: React.FC = () => {
   return (
     <div className="bgWhite">
       <h1>
-        {pokemon.name} - {pokeNumber}
+        {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} -{" "}
+        {pokeNumber}
       </h1>
       <div className="row">
         <div className="column">
@@ -172,6 +219,9 @@ const PokemonDetails: React.FC = () => {
           <div className="row">{types()}</div>
         </div>
         <div className="column">
+          <button onClick={handleFav}>
+            {favorite === false ? "Favoritar" : "Desfavoritar"}
+          </button>
           <h2>Descrição</h2>
           <p>
             O Pokémon faz coisas que um Pokémon deveria fazer, já que ele é um
@@ -189,6 +239,7 @@ const PokemonDetails: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* <BarChart /> */}
     </div>
   );
 };

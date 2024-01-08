@@ -3,7 +3,12 @@ import { PokemonAPI, TypeSlotType } from "../App";
 import { useNavigate } from "react-router-dom";
 import TypeSlot from "./TypeSlot";
 
-export default function Card(pokemon: PokemonAPI) {
+interface CardProps {
+  fav: boolean;
+  pokemon: PokemonAPI;
+}
+
+export default function Card({ fav, pokemon }: CardProps) {
   const navigate = useNavigate();
 
   const pokeNumber = formataNumber(pokemon.id);
@@ -21,12 +26,14 @@ export default function Card(pokemon: PokemonAPI) {
   //pokemon.sprites.other.home.front_default
 
   const onHandleClick = () => {
-    navigate(`/pokemon/${pokemon.id}`, { state: { pokemon } });
+    navigate(`/pokemon/${pokemon.id}`, { state: { pokemon, fav } });
   };
 
   function types() {
     const types = pokemon.types.map((typeSlot: TypeSlotType) => {
-      return <TypeSlot name={typeSlot.type.name.toUpperCase()} />;
+      return (
+        <TypeSlot key={typeSlot.slot} name={typeSlot.type.name.toUpperCase()} />
+      );
     });
     return types;
   }
