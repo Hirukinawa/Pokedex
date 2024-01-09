@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import ReactApexChart from "react-apexcharts";
-import { Status, formataName } from "../App";
+import { Status } from "../App";
+import { formataName } from "../Utils/Utils";
 
 interface BarChartProps {
   stats: Status[];
@@ -34,7 +35,7 @@ const BarChart: React.FC<BarChartProps> = ({ stats }: BarChartProps) => {
         options={chartOptions}
         series={chartOptions.series}
         type="bar"
-        height={250}
+        height={300}
         width={425}
       />
     </div>

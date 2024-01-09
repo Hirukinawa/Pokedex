@@ -3,16 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   AbilityDescription,
-  Move,
   MoveAPI,
   MoveSlotMove,
   PokeList,
   PokemonAPI,
-  Status,
   Type,
   TypeDamage,
   TypeSlotType,
-  formataName,
 } from "../../App";
 import "../../App.css";
 import TypeSlot from "../TypeSlot";
@@ -20,17 +17,17 @@ import {
   deleteFavPokemon,
   getFavPokemons,
   getUrlResult,
-  postFavPokemon,
 } from "../../service/Axios";
 import BarChart from "../BarChart";
 import MoveSlot from "../MoveSlot";
+import { formataName, postPokemon } from "../../Utils/Utils";
+import { PokemonDefault } from "../PokemonDefault";
 
 const PokemonDetails: React.FC = () => {
   const location = useLocation();
-  const pokemon: PokemonAPI = location.state?.pokemon || {
-    id: 0,
-    name: "Unknown",
-  };
+  const pokemon: PokemonAPI = location.state?.pokemon || PokemonDefault;
+
+  console.log(pokemon.moves);
 
   const [shiny, setShiny] = useState(false);
   const [favorite, setFavorite] = useState(false);
@@ -48,6 +45,14 @@ const PokemonDetails: React.FC = () => {
   const [halfTo, setHalfTo] = useState<Type[]>([]);
 
   const pokeNumber = formataNumber(pokemon.id);
+  const frontArt = pokemon.sprites.other.home.front_default.replace(
+    "home",
+    "official-artwork"
+  );
+  const shinyArt = pokemon.sprites.other.home.front_shiny.replace(
+    "home",
+    "official-artwork"
+  );
 
   function formataNumber(num: number): string {
     if (num < 10 && num > 0) {
@@ -140,18 +145,8 @@ const PokemonDetails: React.FC = () => {
   const handleChange = () => setShiny(!shiny);
 
   const handleFav = async () => {
-    const mom: MoveSlotMove[] = [];
-    const poke: PokemonAPI = {
-      id: pokemon.id,
-      name: pokemon.name,
-      types: pokemon.types,
-      abilities: pokemon.abilities,
-      sprites: pokemon.sprites,
-      stats: pokemon.stats,
-      moves: mom,
-    };
     if (favorite === false) {
-      await postFavPokemon(poke);
+      await postPokemon(pokemon);
       setFavorite(true);
     } else {
       await deleteFavPokemon(pokemon.id);
@@ -197,13 +192,13 @@ const PokemonDetails: React.FC = () => {
   const getWeakness = doubleTo.map((weak: Type) => {
     let types = null;
     if (!halfTo.some((item) => item.name === weak.name)) {
-      types = <TypeSlot key={weak.id} name={weak.name.toUpperCase()} />;
+      types = <TypeSlot key={weak.url} name={weak.name.toUpperCase()} />;
     }
     return types;
   });
 
   const getResis = vantagens.map((type: Type) => {
-    return <TypeSlot key={type.id} name={type.name.toUpperCase()} />;
+    return <TypeSlot key={type.url} name={type.name.toUpperCase()} />;
   });
 
   const getEntries = entries.map((ent) => {
@@ -224,7 +219,7 @@ const PokemonDetails: React.FC = () => {
   });
 
   const getPokeMoves = pokeMoves.map((move: MoveAPI) => {
-    return <MoveSlot name={move.name} />;
+    return <MoveSlot move={move} />;
   });
 
   return (
@@ -241,11 +236,7 @@ const PokemonDetails: React.FC = () => {
               Shiny
             </label>
             <img
-              src={
-                shiny
-                  ? pokemon.sprites.other.home.front_shiny
-                  : pokemon.sprites.other.home.front_default
-              }
+              src={shiny ? shinyArt : frontArt}
               width="450px"
               height="auto"
               alt={`${pokemon.name} - ${pokeNumber}`}
@@ -279,7 +270,17 @@ const PokemonDetails: React.FC = () => {
           </div>
         </div>
         <h2>Movimentos</h2>
-        {getPokeMoves}
+        <table>
+          <tr>
+            <th>Golpe</th>
+            <th>Tipo</th>
+            <th>Poder</th>
+            <th>Categoria</th>
+            <th>Precisão</th>
+            <th>PP</th>
+          </tr>
+          {getPokeMoves}
+        </table>
       </div>
     </div>
   );

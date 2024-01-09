@@ -2,11 +2,6 @@
 import "./App.css";
 import { BrowserRouter as Router } from "react-router-dom";
 
-export function formataName(word: string) {
-  const str1 = word.replace("-", " ");
-  return str1.charAt(0).toUpperCase() + str1.slice(1);
-}
-
 export interface Pokemon {
   id: number;
   name: string;
@@ -20,10 +15,39 @@ export interface PokemonAPI {
   sprites: Sprites;
   stats: Status[];
   moves: MoveSlotMove[];
+  species: Species;
+}
+
+export interface Species {
+  name: string;
+  url: string;
+}
+
+export interface PokemonSpecie {
+  id: number;
+  evolution_chain: EvolutionUrl;
+}
+
+export interface EvolutionUrl {
+  url: string;
+}
+
+export interface EvolutionChain {
+  id: number;
+  chain: Chain;
+}
+
+export interface Chain {
+  is_baby: boolean;
+  species: Species;
+  evolves_to: Evolves[];
+}
+
+export interface Evolves {
+  species: Species;
 }
 
 export interface MoveSlotMove {
-  slot: number;
   move: Move;
 }
 
@@ -96,7 +120,6 @@ export interface TypeSlotType {
 }
 
 export interface Type {
-  id: number;
   name: string;
   url: string;
 }

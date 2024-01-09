@@ -22,7 +22,10 @@ export default function Card({ fav, pokemon }: CardProps) {
       return `${num}`;
     }
   }
-  const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
+  const link: string = pokemon.sprites.other.home.front_default.replace(
+    "home",
+    "official-artwork"
+  );
   //pokemon.sprites.other.home.front_default
 
   const onHandleClick = () => {
@@ -53,10 +56,4 @@ export default function Card({ fav, pokemon }: CardProps) {
       </div>
     </>
   );
-}
-{
-  /* <div className="row">
-          <div className="type">Fire</div>
-          <div className="type2">Flying</div>
-        </div> */
 }
