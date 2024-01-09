@@ -33,6 +33,10 @@ export const PokemonDefault: PokemonAPI = {
       },
     },
   },
+  species: {
+    name: "pikachu",
+    url: "https://pokeapi.co/api/v2/pokemon-species/25/",
+  },
   stats: [
     {
       base_stat: 100,
