@@ -45,14 +45,31 @@ const PokemonDetails: React.FC = () => {
   const [halfTo, setHalfTo] = useState<Type[]>([]);
 
   const pokeNumber = formataNumber(pokemon.id);
-  const frontArt = pokemon.sprites.other.home.front_default.replace(
-    "home",
-    "official-artwork"
+  // const frontArt = pokemon.sprites.other.home.front_default.replace(
+  //   "home",
+  //   "official-artwork"
+  // );
+  // const shinyArt = pokemon.sprites.other.home.front_shiny.replace(
+  //   "home",
+  //   "official-artwork"
+  // );
+  const frontArt: string = pokemon.sprites.front_default.replace(
+    "pokemon/",
+    "pokemon/other/official-artwork/"
   );
-  const shinyArt = pokemon.sprites.other.home.front_shiny.replace(
-    "home",
-    "official-artwork"
+  const shinyArt: string = pokemon.sprites.front_default.replace(
+    "pokemon/",
+    "pokemon/other/official-artwork/shiny/"
   );
+  //https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/920.png
+  // const link: string = pokemon.sprites.other.home.front_default.replace(
+  //   "home",
+  //   "official-artwork"
+  // );
+  //pokemon.sprites.other.home.front_default
+
+  //https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/990.png
+  //https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/990.png
 
   function formataNumber(num: number): string {
     if (num < 10 && num > 0) {
