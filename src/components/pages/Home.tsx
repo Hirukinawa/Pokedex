@@ -15,7 +15,7 @@ export default function Home() {
   const [pokemons, setPokemons] = useState<PokemonResult[]>([]);
   const [pokemonsUnity, setPokemonsUnity] = useState<PokemonAPI[]>([]);
   const [load, setLoad] = useState(false);
-  const firstPokemon = 601;
+  const firstPokemon = 1;
 
   const getPokemon = async () => {
     try {

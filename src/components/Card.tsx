@@ -29,6 +29,7 @@ export default function Card({ fav, pokemon }: CardProps) {
   );
 
   const onHandleClick = () => {
+    window.scrollTo(0, 0);
     navigate(`/pokemon/${pokemon.id}`, { state: { pokemon, fav } });
   };
 

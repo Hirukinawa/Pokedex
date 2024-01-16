@@ -21,9 +21,13 @@ export default function MiniCard({ pokemon }: MiniCardProps) {
     }
   }
 
-  const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
+  const link: string = pokemon.sprites.front_default.replace(
+    "pokemon/",
+    "pokemon/other/official-artwork/"
+  );
 
   const onHandleClick = () => {
+    window.scrollTo(0, 0);
     navigate(`/pokemon/${pokemon.id}`, { state: { pokemon }, replace: true });
   };
 
@@ -34,7 +38,7 @@ export default function MiniCard({ pokemon }: MiniCardProps) {
           <img src={link} width="150px" height="150px" />
         </div>
       </div>
-      <h4>{`${formataNumber(pokemon.id)} - ${pokemon.name.toUpperCase()}`}</h4>
+      <h4>{`${pokeNumber} - ${pokemon.name.toUpperCase()}`}</h4>
     </div>
   );
 }
