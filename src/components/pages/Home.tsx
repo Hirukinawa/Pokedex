@@ -14,7 +14,8 @@ export default function Home() {
   const navigate = useNavigate();
   const [pokemons, setPokemons] = useState<PokemonResult[]>([]);
   const [pokemonsUnity, setPokemonsUnity] = useState<PokemonAPI[]>([]);
-  const firstPokemon = 1;
+  const [load, setLoad] = useState(false);
+  const firstPokemon = 601;
 
   const getPokemon = async () => {
     try {
@@ -48,6 +49,39 @@ export default function Home() {
     }
   }, [pokemons]);
 
+  async function getMaisPokemon() {
+    if (load) {
+      console.log("Já solicitou");
+    } else {
+      setLoad(true);
+      const list: PokemonAPI[] = [];
+      try {
+        const pkmnsApi = await getMorePokemonAPI();
+
+        for (let i = 0; i < pkmnsApi.length; i++) {
+          if (pokemonsUnity.length + list.length < 1025) {
+            const pk: PokemonResult = pkmnsApi[i];
+            const str1 = pk.url.replace(
+              "https://pokeapi.co/api/v2/pokemon/",
+              ""
+            );
+            const str2 = str1.replace("/", "");
+            const num = Number(str2);
+            const pokemonRes = await getUnityPokemon(
+              num + pokemonsUnity.length + firstPokemon - 1
+            );
+
+            list.push(pokemonRes);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      setPokemonsUnity((prevList) => [...prevList, ...list]);
+      setLoad(false);
+    }
+  }
+
   const getMorePokemon = async () => {
     const list: PokemonAPI[] = [];
     try {
@@ -80,7 +114,7 @@ export default function Home() {
   }
 
   const onHandleClick = () => {
-    navigate(`/usuarios`);
+    navigate(`/favoritos`);
   };
 
   return (
@@ -94,11 +128,13 @@ export default function Home() {
       <div className="pkmns">
         {pokemonsUnity.length === 0 ? <p>Carregando...</p> : populaPkmn()}
       </div>
-      {pokemonsUnity.length > 0 && pokemonsUnity.length < 1025 && (
-        <button className="loadMore" onClick={getMorePokemon}>
-          <p>Carregar mais</p>
-        </button>
-      )}
+      <div className="columnCenter">
+        {pokemonsUnity.length > 0 && pokemonsUnity.length < 1025 && (
+          <button className="loadMore" onClick={getMaisPokemon}>
+            <p>{load ? "Carregando..." : "Carregar mais"}</p>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

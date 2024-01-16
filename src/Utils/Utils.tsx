@@ -34,6 +34,7 @@ export async function postPokemon(pokemon: PokemonAPI) {
     sprites: sprites,
     stats: pokemon.stats,
     moves: pokemonMoves,
+    species: pokemon.species,
   };
 
   await postFavPokemon(newPokemon);

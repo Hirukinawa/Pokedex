@@ -23,7 +23,10 @@ export default function Card({ fav, pokemon }: CardProps) {
     }
   }
 
-  const link: string = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokeNumber}.png`;
+  const link: string = pokemon.sprites.front_default.replace(
+    "pokemon/",
+    "pokemon/other/official-artwork/"
+  );
 
   const onHandleClick = () => {
     navigate(`/pokemon/${pokemon.id}`, { state: { pokemon, fav } });

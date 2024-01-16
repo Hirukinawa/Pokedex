@@ -1,6 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import "./App.css";
-import { BrowserRouter as Router } from "react-router-dom";
+import { Link, BrowserRouter as Router } from "react-router-dom";
+//import { router } from "./main";
+
+export default function App() {
+  return (
+    <Router>
+      <ul>
+        <li>
+          <Link to="/">Pokédex</Link>
+        </li>
+        <li>
+          <Link to="/favoritos">Favoritos</Link>
+        </li>
+      </ul>
+    </Router>
+  );
+}
 
 export interface Pokemon {
   id: number;
@@ -45,6 +61,7 @@ export interface Chain {
 
 export interface Evolves {
   species: Species;
+  evolves_to: Evolves[];
 }
 
 export interface MoveSlotMove {
@@ -160,8 +177,4 @@ export interface Entries {
 
 export interface Language {
   name: string;
-}
-
-export default function App() {
-  return <Router></Router>;
 }

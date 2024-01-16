@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   AbilityDescription,
+  EvolutionChain,
+  Evolves,
   MoveAPI,
   MoveSlotMove,
   PokeList,
   PokemonAPI,
+  PokemonSpecie,
   Type,
   TypeDamage,
   TypeSlotType,
@@ -22,12 +24,13 @@ import BarChart from "../BarChart";
 import MoveSlot from "../MoveSlot";
 import { formataName, postPokemon } from "../../Utils/Utils";
 import { PokemonDefault } from "../PokemonDefault";
+import MiniCard from "../MiniCard";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 
 const PokemonDetails: React.FC = () => {
+  //console.log("Renderizou");
   const location = useLocation();
   const pokemon: PokemonAPI = location.state?.pokemon || PokemonDefault;
-
-  console.log(pokemon.moves);
 
   const [shiny, setShiny] = useState(false);
   const [favorite, setFavorite] = useState(false);
@@ -44,15 +47,25 @@ const PokemonDetails: React.FC = () => {
   const [doubleTo, setDoubleTo] = useState<Type[]>([]);
   const [halfTo, setHalfTo] = useState<Type[]>([]);
 
+  const [pokeChain, setPokeChain] = useState<PokemonAPI[]>([]);
+
+  useEffect(() => {
+    getMoves();
+    getDescriptions();
+    getFraquezas();
+    getSpecie();
+    getFav();
+  }, [pokemon]);
+
+  useEffect(() => {
+    getResistencias();
+  }, [fraquezas]);
+
+  useEffect(() => {
+    isFav();
+  }, [favPoke]);
+
   const pokeNumber = formataNumber(pokemon.id);
-  // const frontArt = pokemon.sprites.other.home.front_default.replace(
-  //   "home",
-  //   "official-artwork"
-  // );
-  // const shinyArt = pokemon.sprites.other.home.front_shiny.replace(
-  //   "home",
-  //   "official-artwork"
-  // );
   const frontArt: string = pokemon.sprites.front_default.replace(
     "pokemon/",
     "pokemon/other/official-artwork/"
@@ -61,15 +74,6 @@ const PokemonDetails: React.FC = () => {
     "pokemon/",
     "pokemon/other/official-artwork/shiny/"
   );
-  //https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/920.png
-  // const link: string = pokemon.sprites.other.home.front_default.replace(
-  //   "home",
-  //   "official-artwork"
-  // );
-  //pokemon.sprites.other.home.front_default
-
-  //https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/990.png
-  //https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/990.png
 
   function formataNumber(num: number): string {
     if (num < 10 && num > 0) {
@@ -81,7 +85,7 @@ const PokemonDetails: React.FC = () => {
     }
   }
 
-  const getMoves = async () => {
+  const getMoves = useCallback(async () => {
     const movePoke: MoveAPI[] = [];
     await Promise.all(
       pokemon.moves.map(async (move: MoveSlotMove) => {
@@ -90,37 +94,22 @@ const PokemonDetails: React.FC = () => {
       })
     );
     setPokeMoves(movePoke);
-  };
+  }, [pokemon.moves]);
 
-  useEffect(() => {
-    getMoves();
-    getDescriptions();
-    getFraquezas();
-    getFav();
-  }, []);
-
-  useEffect(() => {
-    getResistencias();
-  }, [fraquezas]);
-
-  useEffect(() => {
-    isFav();
-  }, [favPoke]);
-
-  const isFav = () => {
+  const isFav = useCallback(() => {
     favPoke?.pkmnsFav.map((poke: PokemonAPI) => {
       if (pokemon.id === poke.id) {
         setFavorite(true);
       }
     });
-  };
+  }, [favPoke, pokemon.id]);
 
-  const getFav = async () => {
+  const getFav = useCallback(async () => {
     const response = await getFavPokemons();
     setFavPoke(response);
-  };
+  }, []);
 
-  const getDescriptions = async () => {
+  const getDescriptions = useCallback(async () => {
     const list: AbilityDescription[] = [];
     try {
       await Promise.all(
@@ -133,9 +122,9 @@ const PokemonDetails: React.FC = () => {
       console.log(error);
     }
     setEntries(list);
-  };
+  }, [pokemon.abilities]);
 
-  const getFraquezas = async () => {
+  const getFraquezas = useCallback(async () => {
     const fraquezasList: TypeDamage[] = [];
     try {
       await Promise.all(
@@ -148,16 +137,60 @@ const PokemonDetails: React.FC = () => {
       console.log(error);
     }
     setFraquezas(fraquezasList);
-  };
+  }, [pokemon.types]);
 
-  function types() {
-    const types = pokemon.types.map((typeSlot: TypeSlotType) => {
-      return (
-        <TypeSlot key={typeSlot.slot} name={typeSlot.type.name.toUpperCase()} />
-      );
-    });
-    return types;
+  function switchUrl(link: string) {
+    return link.replace("-species", "");
   }
+
+  async function getSpecie() {
+    const pokeList: PokemonAPI[] = [];
+    const pokemonSpecie: PokemonSpecie = await getUrlResult(
+      pokemon.species.url
+    );
+    const pokemonChain: EvolutionChain = await getUrlResult(
+      pokemonSpecie.evolution_chain.url
+    );
+    const firstForm: PokemonAPI = await getUrlResult(
+      switchUrl(pokemonChain.chain.species.url)
+    );
+    pokeList.push(firstForm);
+
+    if (pokemonChain.chain.evolves_to.length > 0) {
+      await Promise.all(
+        pokemonChain.chain.evolves_to.map(async (poke: Evolves) => {
+          const pokeUrl: PokemonAPI = await getUrlResult(
+            switchUrl(poke.species.url)
+          );
+          pokeList.push(pokeUrl);
+          if (poke.evolves_to.length > 0) {
+            await Promise.all(
+              poke.evolves_to.map(async (pk: Evolves) => {
+                const pokeUrl: PokemonAPI = await getUrlResult(
+                  switchUrl(pk.species.url)
+                );
+                pokeList.push(pokeUrl);
+              })
+            );
+          }
+        })
+      );
+    }
+    pokeList.map((poke: PokemonAPI) => {
+      console.log(poke);
+    });
+    setPokeChain(pokeList);
+  }
+
+  const getSpecies = pokeChain.map((poke: PokemonAPI) => {
+    return <MiniCard pokemon={poke} />;
+  });
+
+  const types = useMemo(() => {
+    return pokemon.types.map((typeSlot: TypeSlotType) => (
+      <TypeSlot key={typeSlot.slot} name={typeSlot.type.name.toUpperCase()} />
+    ));
+  }, [pokemon.types]);
 
   const handleChange = () => setShiny(!shiny);
 
@@ -235,9 +268,11 @@ const PokemonDetails: React.FC = () => {
     );
   });
 
-  const getPokeMoves = pokeMoves.map((move: MoveAPI) => {
-    return <MoveSlot move={move} />;
-  });
+  const getPokeMoves = useMemo(() => {
+    return pokeMoves.map((move: MoveAPI) => (
+      <MoveSlot key={move.id} move={move} />
+    ));
+  }, [pokeMoves]);
 
   return (
     <div className="bgWhite">
@@ -258,7 +293,7 @@ const PokemonDetails: React.FC = () => {
               height="auto"
               alt={`${pokemon.name} - ${pokeNumber}`}
             />
-            <div className="row">{types()}</div>
+            <div className="row">{types}</div>
             <BarChart stats={pokemon.stats} />
           </div>
           <div className="column">
@@ -286,6 +321,12 @@ const PokemonDetails: React.FC = () => {
             </div>
           </div>
         </div>
+        {pokeChain.length > 1 && (
+          <div className="chain">
+            <h2>Evoluções</h2>
+            <div className="chainRow">{getSpecies}</div>
+          </div>
+        )}
         <h2>Movimentos</h2>
         <table>
           <tr>
@@ -304,3 +345,8 @@ const PokemonDetails: React.FC = () => {
 };
 
 export default PokemonDetails;
+
+// const pokeApi3: PokemonAPI = await getUrlResult(
+//   switchUrl(pokemonChain.chain.evolves_to[0].evolves_to[0].species.url)
+// );
+// pokeList.push(pokeApi3);

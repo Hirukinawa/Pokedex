@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import ReactDOM from "react-dom/client";
-//import App from "./App.tsx";
-import "./index.css";
 import Home from "./components/pages/Home.tsx";
 import PokemonDetails from "./components/pages/PokemonDetails.tsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Users from "./components/pages/Usuarios.tsx";
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
@@ -19,7 +17,7 @@ const router = createBrowserRouter([
     element: <PokemonDetails />,
   },
   {
-    path: "/usuarios",
+    path: "/favoritos",
     element: <Users />,
   },
 ]);
