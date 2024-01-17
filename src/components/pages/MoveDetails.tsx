@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useLocation } from "react-router-dom";
 import "../../App.css";
-import React, { useEffect } from "react";
+import React from "react";
 import { MoveAPI, PokemonResult } from "../../App";
 import { MoveDefault } from "../MoveDefault";
 import { capitalize, formataMove, formataName } from "../../Utils/Utils";
