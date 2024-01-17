@@ -21,9 +21,9 @@ export const PokemonDefault: PokemonAPI = {
   ],
   sprites: {
     front_default:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10094.png",
     front_shiny:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/25.png",
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/10094.png",
     other: {
       home: {
         front_default:

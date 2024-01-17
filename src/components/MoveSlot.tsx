@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { MoveAPI } from "../App";
 import TypeSlot from "./TypeSlot";
 import { formataName } from "../Utils/Utils";
+import { useNavigate } from "react-router-dom";
 
 interface MoveSlotProps {
   move: MoveAPI;
@@ -12,13 +14,18 @@ const MoveSlot: React.FC<MoveSlotProps> = ({ move }) => {
     move.damage_class.name === "status" ? "other" : move.damage_class.name
   }.png`;
 
+  const navigate = useNavigate();
+
+  const onHandleClick = () => {
+    window.scrollTo(0, 0);
+    navigate(`/movimento/${move.name}`, { state: { move } });
+  };
+
   return (
     <tr>
-      <td>{`${formataName(move.name)}`}</td>
+      <td onClick={onHandleClick}>{`${formataName(move.name)}`}</td>
       <td>
-        <div className="typeTd">
-          {<TypeSlot name={move.type.name.toUpperCase()} />}
-        </div>
+        <div className="typeTd">{<TypeSlot name={move.type.name} />}</div>
       </td>
       <td>{move.power !== null ? move.power : " - "}</td>
       <td>

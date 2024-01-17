@@ -30,14 +30,12 @@ export default function Card({ fav, pokemon }: CardProps) {
 
   const onHandleClick = () => {
     window.scrollTo(0, 0);
-    navigate(`/pokemon/${pokemon.id}`, { state: { pokemon, fav } });
+    navigate(`/pokemon/${pokemon.name}`, { state: { pokemon, fav } });
   };
 
   function types() {
     const types = pokemon.types.map((typeSlot: TypeSlotType) => {
-      return (
-        <TypeSlot key={typeSlot.slot} name={typeSlot.type.name.toUpperCase()} />
-      );
+      return <TypeSlot key={typeSlot.slot} name={typeSlot.type.name} />;
     });
     return types;
   }

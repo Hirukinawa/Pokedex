@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useLocation } from "react-router-dom";
 import {
@@ -22,13 +23,12 @@ import {
 } from "../../service/Axios";
 import BarChart from "../BarChart";
 import MoveSlot from "../MoveSlot";
-import { formataName, postPokemon } from "../../Utils/Utils";
+import { formataName, formataNumber, postPokemon } from "../../Utils/Utils";
 import { PokemonDefault } from "../PokemonDefault";
 import MiniCard from "../MiniCard";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 
 const PokemonDetails: React.FC = () => {
-  //console.log("Renderizou");
   const location = useLocation();
   const pokemon: PokemonAPI = location.state?.pokemon || PokemonDefault;
 
@@ -74,16 +74,6 @@ const PokemonDetails: React.FC = () => {
     "pokemon/",
     "pokemon/other/official-artwork/shiny/"
   );
-
-  function formataNumber(num: number): string {
-    if (num < 10 && num > 0) {
-      return `00${num}`;
-    } else if (num < 100) {
-      return `0${num}`;
-    } else {
-      return `${num}`;
-    }
-  }
 
   const getMoves = useCallback(async () => {
     const movePoke: MoveAPI[] = [];
@@ -188,7 +178,7 @@ const PokemonDetails: React.FC = () => {
 
   const types = useMemo(() => {
     return pokemon.types.map((typeSlot: TypeSlotType) => (
-      <TypeSlot key={typeSlot.slot} name={typeSlot.type.name.toUpperCase()} />
+      <TypeSlot key={typeSlot.slot} name={typeSlot.type.name} />
     ));
   }, [pokemon.types]);
 
@@ -242,13 +232,13 @@ const PokemonDetails: React.FC = () => {
   const getWeakness = doubleTo.map((weak: Type) => {
     let types = null;
     if (!halfTo.some((item) => item.name === weak.name)) {
-      types = <TypeSlot key={weak.url} name={weak.name.toUpperCase()} />;
+      types = <TypeSlot key={weak.url} name={weak.name} />;
     }
     return types;
   });
 
   const getResis = vantagens.map((type: Type) => {
-    return <TypeSlot key={type.url} name={type.name.toUpperCase()} />;
+    return <TypeSlot key={type.url} name={type.name} />;
   });
 
   const getEntries = entries.map((ent) => {

@@ -18,11 +18,6 @@ export default function App() {
   );
 }
 
-export interface Pokemon {
-  id: number;
-  name: string;
-}
-
 export interface PokemonAPI {
   id: number;
   name: string;
@@ -84,6 +79,7 @@ export interface MoveAPI {
   damage_class: DamageClass;
   effect_chance: number;
   effect_entries: EffectEntrie[];
+  learned_by_pokemon: PokemonResult[];
 }
 
 export interface EffectEntrie {

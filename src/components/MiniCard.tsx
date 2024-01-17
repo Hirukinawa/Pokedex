@@ -28,7 +28,7 @@ export default function MiniCard({ pokemon }: MiniCardProps) {
 
   const onHandleClick = () => {
     window.scrollTo(0, 0);
-    navigate(`/pokemon/${pokemon.id}`, { state: { pokemon }, replace: true });
+    navigate(`/pokemon/${pokemon.name}`, { state: { pokemon }, replace: true });
   };
 
   return (
