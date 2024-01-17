@@ -12,8 +12,6 @@ const MoveDetails: React.FC = () => {
   const location = useLocation();
   const move: MoveAPI = location.state?.move || MoveDefault;
 
-  useEffect(() => {}, []);
-
   const getPoke = move.learned_by_pokemon.map((poke: PokemonResult) => {
     const str1 = poke.url.replace("https://pokeapi.co/api/v2/pokemon/", "");
     const link = str1.replace("/", "");
