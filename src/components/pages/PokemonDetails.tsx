@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import {
   AbilityDescription,
   EvolutionChain,
@@ -29,8 +29,45 @@ import MiniCard from "../MiniCard";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 
 const PokemonDetails: React.FC = () => {
+  async function getPokemon(nomePoke: string | undefined): Promise<PokemonAPI> {
+    const pokeApi: PokemonAPI = await getUrlResult(
+      `https://pokeapi.co/api/v2/pokemon/${nomePoke}`
+    );
+    return pokeApi;
+  }
+
   const location = useLocation();
-  const pokemon: PokemonAPI = location.state?.pokemon || PokemonDefault;
+
+  const { name } = useParams();
+
+  const [pokemon, setPokemon] = useState<PokemonAPI | undefined>(
+    location.state?.pokemon
+  );
+
+  const fetchPokemon = async () => {
+    try {
+      const dadosPokemon: PokemonAPI = await getPokemon(name);
+      setPokemon(dadosPokemon);
+      //return dadosPokemon;
+    } catch (error) {
+      console.error("Erro ao buscar dados do Pokémon:", error);
+    }
+  };
+  //   const pokemon: PokemonAPI = location.state?.pokemon || fetchPokemon();
+
+  useEffect(() => {
+    if (!location.state?.pokemon) {
+      fetchPokemon();
+    }
+  }, [location.state?.pokemon]);
+
+  useEffect(() => {
+    if (!location.state?.pokemon) {
+      fetchPokemon();
+    } else {
+      setPokemon(location.state?.pokemon);
+    }
+  }, []);
 
   const [shiny, setShiny] = useState(false);
   const [favorite, setFavorite] = useState(false);
@@ -65,34 +102,49 @@ const PokemonDetails: React.FC = () => {
     isFav();
   }, [favPoke]);
 
-  const pokeNumber = formataNumber(pokemon.id);
-  const frontArt: string = pokemon.sprites.front_default.replace(
-    "pokemon/",
-    "pokemon/other/official-artwork/"
+  const pokeNumber = formataNumber(
+    pokemon !== undefined ? pokemon!.id : PokemonDefault.id
   );
-  const shinyArt: string = pokemon.sprites.front_default.replace(
-    "pokemon/",
-    "pokemon/other/official-artwork/shiny/"
-  );
+  const frontArt: string =
+    pokemon === undefined
+      ? PokemonDefault.sprites.front_default.replace(
+          "pokemon/",
+          "pokemon/other/official-artwork/"
+        )
+      : pokemon!.sprites.front_default.replace(
+          "pokemon/",
+          "pokemon/other/official-artwork/"
+        );
+
+  const shinyArt: string =
+    pokemon === undefined
+      ? PokemonDefault.sprites.front_default.replace(
+          "pokemon/",
+          "pokemon/other/official-artwork/"
+        )
+      : pokemon!.sprites.front_default.replace(
+          "pokemon/",
+          "pokemon/other/official-artwork/"
+        );
 
   const getMoves = useCallback(async () => {
     const movePoke: MoveAPI[] = [];
     await Promise.all(
-      pokemon.moves.map(async (move: MoveSlotMove) => {
+      pokemon!.moves.map(async (move: MoveSlotMove) => {
         const moveApi = await getUrlResult(move.move.url);
         movePoke.push(moveApi);
       })
     );
     setPokeMoves(movePoke);
-  }, [pokemon.moves]);
+  }, [pokemon?.moves]);
 
   const isFav = useCallback(() => {
     favPoke?.pkmnsFav.map((poke: PokemonAPI) => {
-      if (pokemon.id === poke.id) {
+      if (pokemon?.id === poke.id) {
         setFavorite(true);
       }
     });
-  }, [favPoke, pokemon.id]);
+  }, [favPoke, pokemon?.id]);
 
   const getFav = useCallback(async () => {
     const response = await getFavPokemons();
@@ -103,7 +155,7 @@ const PokemonDetails: React.FC = () => {
     const list: AbilityDescription[] = [];
     try {
       await Promise.all(
-        pokemon.abilities.map(async (slot) => {
+        pokemon!.abilities.map(async (slot) => {
           const descriptions = await getUrlResult(slot.ability.url);
           list.push(descriptions);
         })
@@ -112,13 +164,13 @@ const PokemonDetails: React.FC = () => {
       console.log(error);
     }
     setEntries(list);
-  }, [pokemon.abilities]);
+  }, [pokemon?.abilities]);
 
   const getFraquezas = useCallback(async () => {
     const fraquezasList: TypeDamage[] = [];
     try {
       await Promise.all(
-        pokemon.types.map(async (slot) => {
+        pokemon!.types.map(async (slot) => {
           const types = await getUrlResult(slot.type.url);
           fraquezasList.push(types);
         })
@@ -127,7 +179,7 @@ const PokemonDetails: React.FC = () => {
       console.log(error);
     }
     setFraquezas(fraquezasList);
-  }, [pokemon.types]);
+  }, [pokemon?.types]);
 
   function switchUrl(link: string) {
     return link.replace("-species", "");
@@ -136,7 +188,7 @@ const PokemonDetails: React.FC = () => {
   async function getSpecie() {
     const pokeList: PokemonAPI[] = [];
     const pokemonSpecie: PokemonSpecie = await getUrlResult(
-      pokemon.species.url
+      pokemon!.species.url
     );
     const pokemonChain: EvolutionChain = await getUrlResult(
       pokemonSpecie.evolution_chain.url
@@ -166,9 +218,6 @@ const PokemonDetails: React.FC = () => {
         })
       );
     }
-    pokeList.map((poke: PokemonAPI) => {
-      console.log(poke);
-    });
     setPokeChain(pokeList);
   }
 
@@ -177,19 +226,19 @@ const PokemonDetails: React.FC = () => {
   });
 
   const types = useMemo(() => {
-    return pokemon.types.map((typeSlot: TypeSlotType) => (
+    return pokemon?.types.map((typeSlot: TypeSlotType) => (
       <TypeSlot key={typeSlot.slot} name={typeSlot.type.name} />
     ));
-  }, [pokemon.types]);
+  }, [pokemon?.types]);
 
   const handleChange = () => setShiny(!shiny);
 
   const handleFav = async () => {
     if (favorite === false) {
-      await postPokemon(pokemon);
+      await postPokemon(pokemon!);
       setFavorite(true);
     } else {
-      await deleteFavPokemon(pokemon.id);
+      await deleteFavPokemon(pokemon!.id);
       setFavorite(false);
     }
   };
@@ -266,77 +315,78 @@ const PokemonDetails: React.FC = () => {
 
   return (
     <div className="bgWhite">
-      <h1>
-        {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} -{" "}
-        {pokeNumber}
-      </h1>
-      <div className="column">
-        <div className="row">
+      {pokemon === undefined ? (
+        <h1>Não foi possível encontrar esse pokémon</h1>
+      ) : (
+        <div>
+          <h1>
+            {pokemon!.name.charAt(0).toUpperCase() + pokemon!.name.slice(1)} -{" "}
+            {pokeNumber}
+          </h1>
           <div className="column">
-            <label htmlFor="">
-              <input type="checkbox" onChange={handleChange} />
-              Shiny
-            </label>
-            <img
-              src={shiny ? shinyArt : frontArt}
-              width="450px"
-              height="auto"
-              alt={`${pokemon.name} - ${pokeNumber}`}
-            />
-            <div className="row">{types}</div>
-            <BarChart stats={pokemon.stats} />
-          </div>
-          <div className="column">
-            <button className="loadMore" onClick={handleFav}>
-              {favorite === false ? "Favoritar" : "Desfavoritar"}
-            </button>
-            <h2>Descrição</h2>
-            <p>
-              O Pokémon faz coisas que um Pokémon deveria fazer, já que ele é um
-              Pokémon.
-            </p>
-            <h2>Habilidades</h2>
-            {getEntries}
-            <h2>Vantagens</h2>
-            <div className="rowTypes">
-              {vantagens.length > 0
-                ? getResis
-                : vantagens.length < 1
-                ? "Não possui"
-                : "Carregando..."}
+            <div className="row">
+              <div className="column">
+                <label htmlFor="">
+                  <input type="checkbox" onChange={handleChange} />
+                  Shiny
+                </label>
+                <img
+                  src={shiny ? shinyArt : frontArt}
+                  width="450px"
+                  height="auto"
+                  alt={`${pokemon!.name} - ${pokeNumber}`}
+                />
+                <div className="row">{types}</div>
+                <BarChart stats={pokemon!.stats} />
+              </div>
+              <div className="column">
+                <button className="loadMore" onClick={handleFav}>
+                  {favorite === false ? "Favoritar" : "Desfavoritar"}
+                </button>
+                <h2>Descrição</h2>
+                <p>
+                  O Pokémon faz coisas que um Pokémon deveria fazer, já que ele
+                  é um Pokémon.
+                </p>
+                <h2>Habilidades</h2>
+                {getEntries}
+                <h2>Vantagens</h2>
+                <div className="rowTypes">
+                  {vantagens.length > 0
+                    ? getResis
+                    : vantagens.length < 1
+                    ? "Não possui"
+                    : "Carregando..."}
+                </div>
+                <h2>Fraquezas</h2>
+                <div className="rowTypes">
+                  {doubleTo.length > 0 ? getWeakness : "Carregando..."}
+                </div>
+              </div>
             </div>
-            <h2>Fraquezas</h2>
-            <div className="rowTypes">
-              {doubleTo.length > 0 ? getWeakness : "Carregando..."}
-            </div>
+            {pokeChain.length > 1 && (
+              <div className="chain">
+                <h2>Evoluções</h2>
+                <div className="chainRow">{getSpecies}</div>
+              </div>
+            )}
+            <h2>Movimentos</h2>
+            <table>
+              <tr>
+                <th>Golpe</th>
+                <th>Tipo</th>
+                <th>Poder</th>
+                <th>Categoria</th>
+                <th>Precisão</th>
+                <th>PP</th>
+              </tr>
+              {getPokeMoves}
+            </table>
           </div>
         </div>
-        {pokeChain.length > 1 && (
-          <div className="chain">
-            <h2>Evoluções</h2>
-            <div className="chainRow">{getSpecies}</div>
-          </div>
-        )}
-        <h2>Movimentos</h2>
-        <table>
-          <tr>
-            <th>Golpe</th>
-            <th>Tipo</th>
-            <th>Poder</th>
-            <th>Categoria</th>
-            <th>Precisão</th>
-            <th>PP</th>
-          </tr>
-          {getPokeMoves}
-        </table>
-      </div>
+      )}
     </div>
   );
 };
 
 export default PokemonDetails;
-
-// const pokeApi3: PokemonAPI = await getUrlResult(
-//   switchUrl(pokemonChain.chain.evolves_to[0].evolves_to[0].species.url)
-// );
-// pokeList.push(pokeApi3);
