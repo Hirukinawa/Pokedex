@@ -27,43 +27,37 @@ import { formataName, formataNumber, postPokemon } from "../../Utils/Utils";
 import { PokemonDefault } from "../PokemonDefault";
 import MiniCard from "../MiniCard";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-//import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const PokemonDetails: React.FC = () => {
   const location = useLocation();
-  const pokemon: PokemonAPI = location.state?.pokemon || PokemonDefault;
 
-  // async function getPokemon(nomePoke: string | undefined): Promise<PokemonAPI> {
-  //   const pokeApi: PokemonAPI = await getUrlResult(
-  //     `https://pokeapi.co/api/v2/pokemon/${nomePoke}`
-  //   );
-  //   return pokeApi;
-  // }
-  //const { name } = useParams();
-  // const [pokemon, setPokemon] = useState<PokemonAPI | undefined>(
-  //   location.state?.pokemon
-  // );
-  // const fetchPokemon = async () => {
-  //   try {
-  //     const dadosPokemon: PokemonAPI = await getPokemon(name);
-  //     setPokemon(dadosPokemon);
-  //     //return dadosPokemon;
-  //   } catch (error) {
-  //     console.error("Erro ao buscar dados do Pokémon:", error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (!location.state?.pokemon) {
-  //     fetchPokemon();
-  //   }
-  // }, [location.state?.pokemon]);
-  // useEffect(() => {
-  //   if (!location.state?.pokemon) {
-  //     fetchPokemon();
-  //   } else {
-  //     setPokemon(location.state?.pokemon);
-  //   }
-  // }, []);
+  async function getPokemon(nomePoke: string | undefined): Promise<PokemonAPI> {
+    const pokeApi: PokemonAPI = await getUrlResult(
+      `https://pokeapi.co/api/v2/pokemon/${nomePoke}`
+    );
+    return pokeApi;
+  }
+  const { name } = useParams();
+  const [pokemon, setPokemon] = useState<PokemonAPI | undefined>(
+    location.state?.pokemon
+  );
+  const fetchPokemon = async () => {
+    try {
+      const dadosPokemon: PokemonAPI = await getPokemon(name);
+      setPokemon(dadosPokemon);
+    } catch (error) {
+      console.error("Erro ao buscar dados do Pokémon:", error);
+    }
+  };
+  useEffect(() => {
+    if (!location.state?.pokemon) {
+      fetchPokemon();
+    }
+  }, [location.state?.pokemon]);
+  useEffect(() => {
+    setPokemon(location.state?.pokemon);
+  }, [name]);
 
   const [shiny, setShiny] = useState(false);
   const [favorite, setFavorite] = useState(false);
@@ -101,13 +95,14 @@ const PokemonDetails: React.FC = () => {
   const pokeNumber = formataNumber(
     pokemon !== undefined ? pokemon!.id : PokemonDefault.id
   );
+
   const frontArt: string =
     pokemon === undefined
       ? PokemonDefault.sprites.front_default.replace(
           "pokemon/",
           "pokemon/other/official-artwork/"
         )
-      : pokemon!.sprites.front_default.replace(
+      : pokemon.sprites.front_default.replace(
           "pokemon/",
           "pokemon/other/official-artwork/"
         );
@@ -118,9 +113,9 @@ const PokemonDetails: React.FC = () => {
           "pokemon/",
           "pokemon/other/official-artwork/"
         )
-      : pokemon!.sprites.front_default.replace(
+      : pokemon.sprites.front_default.replace(
           "pokemon/",
-          "pokemon/other/official-artwork/"
+          "pokemon/other/official-artwork/shiny/"
         );
 
   const getMoves = useCallback(async () => {
