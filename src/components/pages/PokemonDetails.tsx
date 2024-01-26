@@ -311,8 +311,9 @@ const PokemonDetails: React.FC = () => {
       ) : (
         <div>
           <h1>
-            {pokemon!.name.charAt(0).toUpperCase() + pokemon!.name.slice(1)} -{" "}
-            {pokeNumber}
+            {pokemon!.species.name.charAt(0).toUpperCase() +
+              pokemon!.species.name.slice(1)}{" "}
+            - {pokeNumber}
           </h1>
           <div className="column">
             <div className="row">

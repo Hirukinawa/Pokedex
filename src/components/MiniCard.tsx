@@ -38,7 +38,7 @@ export default function MiniCard({ pokemon }: MiniCardProps) {
           <img src={link} width="150px" height="150px" />
         </div>
       </div>
-      <h4>{`${pokeNumber} - ${pokemon.name.toUpperCase()}`}</h4>
+      <h4>{`${pokeNumber} - ${pokemon.species.name.toUpperCase()}`}</h4>
     </div>
   );
 }

@@ -48,7 +48,7 @@ export default function Card({ fav, pokemon }: CardProps) {
         </div>
         <p>
           <b>
-            {pokeNumber} - {pokemon.name.toUpperCase()}
+            {pokeNumber} - {pokemon.species.name.toUpperCase()}
           </b>
         </p>
         <div className="row">{types()}</div>
