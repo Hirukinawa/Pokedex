@@ -7,7 +7,6 @@ import {
   Evolves,
   MoveAPI,
   MoveSlotMove,
-  PokeList,
   PokemonAPI,
   PokemonSpecie,
   Type,
@@ -17,13 +16,11 @@ import {
 import "../../App.css";
 import TypeSlot from "../TypeSlot";
 import {
-  deleteFavPokemon,
-  getFavPokemons,
   getUrlResult,
 } from "../../service/Axios";
 import BarChart from "../BarChart";
 import MoveSlot from "../MoveSlot";
-import { formataName, formataNumber, postPokemon } from "../../Utils/Utils";
+import { formataName, formataNumber } from "../../Utils/Utils";
 import { PokemonDefault } from "../PokemonDefault";
 import MiniCard from "../MiniCard";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
@@ -60,9 +57,6 @@ const PokemonDetails: React.FC = () => {
   }, [name]);
 
   const [shiny, setShiny] = useState(false);
-  const [favorite, setFavorite] = useState(false);
-
-  const [favPoke, setFavPoke] = useState<PokeList>();
 
   const [pokeMoves, setPokeMoves] = useState<MoveAPI[]>([]);
 
@@ -81,16 +75,11 @@ const PokemonDetails: React.FC = () => {
     getDescriptions();
     getFraquezas();
     getSpecie();
-    getFav();
   }, [pokemon]);
 
   useEffect(() => {
     getResistencias();
   }, [fraquezas]);
-
-  useEffect(() => {
-    isFav();
-  }, [favPoke]);
 
   const pokeNumber = formataNumber(
     pokemon !== undefined ? pokemon!.id : PokemonDefault.id
@@ -128,19 +117,6 @@ const PokemonDetails: React.FC = () => {
     );
     setPokeMoves(movePoke);
   }, [pokemon?.moves]);
-
-  const isFav = useCallback(() => {
-    favPoke?.pkmnsFav.map((poke: PokemonAPI) => {
-      if (pokemon?.id === poke.id) {
-        setFavorite(true);
-      }
-    });
-  }, [favPoke, pokemon?.id]);
-
-  const getFav = useCallback(async () => {
-    const response = await getFavPokemons();
-    setFavPoke(response);
-  }, []);
 
   const getDescriptions = useCallback(async () => {
     const list: AbilityDescription[] = [];
@@ -223,16 +199,6 @@ const PokemonDetails: React.FC = () => {
   }, [pokemon?.types]);
 
   const handleChange = () => setShiny(!shiny);
-
-  const handleFav = async () => {
-    if (favorite === false) {
-      await postPokemon(pokemon!);
-      setFavorite(true);
-    } else {
-      await deleteFavPokemon(pokemon!.id);
-      setFavorite(false);
-    }
-  };
 
   function getResistencias() {
     const resistencias: Type[] = [];
@@ -332,9 +298,6 @@ const PokemonDetails: React.FC = () => {
                 <BarChart stats={pokemon!.stats} />
               </div>
               <div className="column">
-                <button className="loadMore" onClick={handleFav}>
-                  {favorite === false ? "Favoritar" : "Desfavoritar"}
-                </button>
                 <h2>Descrição</h2>
                 <p>
                   O Pokémon faz coisas que um Pokémon deveria fazer, já que ele

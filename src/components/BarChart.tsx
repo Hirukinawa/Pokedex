@@ -3,14 +3,14 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 import { Status } from "../App";
 import { formataName } from "../Utils/Utils";
+import { ApexOptions } from "apexcharts";
 
 interface BarChartProps {
   stats: Status[];
 }
 
 const BarChart: React.FC<BarChartProps> = ({ stats }: BarChartProps) => {
-  const chartOptions = {
-    // Define your chart options here
+  const chartOptions: ApexOptions = {
     chart: {
       type: "line",
     },

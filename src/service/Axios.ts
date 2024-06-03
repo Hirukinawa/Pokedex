@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from "axios";
-import { PokemonAPI } from "../App";
 
 const apiUrl = "https://pokeapi.co/api/v2";
-const apiLink = "http://localhost:5500/api";
 
 export async function getPokemons() {
   try {
@@ -52,39 +50,4 @@ export async function getUrlResult(url: string) {
     console.log(error);
     throw new Error("Erro ao obter dados da habilidade");
   }
-}
-
-export async function getFavPokemons() {
-  try {
-    const response = await axios.get(apiLink);
-    const data = response.data;
-    return data;
-  } catch (error) {
-    alert(error);
-    console.log(error);
-    throw new Error("Erro ao obter pokemon favoritos");
-  }
-}
-
-export async function postFavPokemon(pokemon: PokemonAPI) {
-  axios
-    .post(apiLink, pokemon)
-    .then()
-    .catch((error) => {
-      alert(error);
-      console.log(error);
-      throw new Error("Erro ao favoritar pokémon");
-    });
-}
-
-export async function deleteFavPokemon(id: number) {
-  return axios
-    .delete(`${apiLink}/${id}`)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      alert(error);
-      console.log(error);
-    });
 }

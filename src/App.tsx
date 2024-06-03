@@ -10,9 +10,6 @@ export default function App() {
         <li>
           <Link to="/">Pokédex</Link>
         </li>
-        <li>
-          <Link to="/favoritos">Favoritos</Link>
-        </li>
       </ul>
     </Router>
   );

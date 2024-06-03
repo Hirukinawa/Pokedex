@@ -23,7 +23,7 @@ const MoveSlot: React.FC<MoveSlotProps> = ({ move }) => {
 
   return (
     <tr>
-      <td onClick={onHandleClick}>{`${formataName(move.name)}`}</td>
+      <td id="moveName" onClick={onHandleClick}>{`${formataName(move.name)}`}</td>
       <td>
         <div className="typeTd">{<TypeSlot name={move.type.name} />}</div>
       </td>
