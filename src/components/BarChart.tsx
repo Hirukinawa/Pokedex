@@ -36,7 +36,7 @@ const BarChart: React.FC<BarChartProps> = ({ stats }: BarChartProps) => {
         series={chartOptions.series}
         type="bar"
         height={300}
-        width={425}
+        class="statusBar"
       />
     </div>
   );

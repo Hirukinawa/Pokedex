@@ -25,6 +25,7 @@ import { PokemonDefault } from "../PokemonDefault";
 import MiniCard from "../MiniCard";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
+//import LateralBarChart from "../LateralBarChart";
 
 const PokemonDetails: React.FC = () => {
   const location = useLocation();
@@ -275,69 +276,66 @@ const PokemonDetails: React.FC = () => {
       {pokemon === undefined ? (
         <h1>Não foi possível encontrar esse pokémon</h1>
       ) : (
-        <div>
+        <div id="pkDetails">
           <h1>
             {pokemon!.species.name.charAt(0).toUpperCase() +
               pokemon!.species.name.slice(1)}{" "}
             - {pokeNumber}
           </h1>
-          <div className="column">
-            <div className="row">
-              <div className="column">
-                <label htmlFor="">
-                  <input type="checkbox" onChange={handleChange} />
-                  Shiny
-                </label>
-                <img
-                  src={shiny ? shinyArt : frontArt}
-                  width="450px"
-                  height="auto"
-                  alt={`${pokemon!.name} - ${pokeNumber}`}
-                />
-                <div className="row">{types}</div>
-                <BarChart stats={pokemon!.stats} />
+          <div className="row">
+            <div id="detailsLeft" className="column">
+              <label htmlFor="shinyInput">
+                <input id="shinyInput" type="checkbox" onChange={handleChange} />
+                Shiny
+              </label>
+              <img
+                id="pokeImg"
+                src={shiny ? shinyArt : frontArt}
+                alt={`${pokemon!.name} - ${pokeNumber}`}
+              />
+              <div id="pokemonTypes" className="row">{types}</div>
+              <BarChart stats={pokemon!.stats} />
+            </div>
+            <div id="detailsRight" className="column">
+              <h2>Descrição</h2>
+              <p>
+                O Pokémon faz coisas que um Pokémon deveria fazer, já que ele
+                é um Pokémon.
+              </p>
+              <h2>Habilidades</h2>
+              {getEntries}
+              <h2>Vantagens</h2>
+              <div className="rowTypes">
+                {vantagens.length > 0
+                  ? getResis
+                  : vantagens.length < 1
+                  ? "Não possui"
+                  : "Carregando..."}
               </div>
-              <div className="column">
-                <h2>Descrição</h2>
-                <p>
-                  O Pokémon faz coisas que um Pokémon deveria fazer, já que ele
-                  é um Pokémon.
-                </p>
-                <h2>Habilidades</h2>
-                {getEntries}
-                <h2>Vantagens</h2>
-                <div className="rowTypes">
-                  {vantagens.length > 0
-                    ? getResis
-                    : vantagens.length < 1
-                    ? "Não possui"
-                    : "Carregando..."}
-                </div>
-                <h2>Fraquezas</h2>
-                <div className="rowTypes">
-                  {doubleTo.length > 0 ? getWeakness : "Carregando..."}
-                </div>
+              <h2>Fraquezas</h2>
+              <div className="rowTypes">
+                {doubleTo.length > 0 ? getWeakness : "Carregando..."}
               </div>
             </div>
-            {pokeChain.length > 1 && (
-              <div className="chain">
-                <h2>Evoluções</h2>
-                <div className="chainRow">{getSpecies}</div>
-              </div>
-            )}
-            <h2>Movimentos</h2>
-            <table>
-              <tr>
-                <th>Golpe</th>
-                <th>Tipo</th>
-                <th>Poder</th>
-                <th>Categoria</th>
-                <th>Precisão</th>
-                <th>PP</th>
-              </tr>
-              {getPokeMoves}
-            </table>
           </div>
+          {pokeChain.length > 1 && (
+            <div className="chain">
+              <h2>Evoluções</h2>
+              <div className="chainRow">{getSpecies}</div>
+            </div>
+          )}
+          <h2>Movimentos</h2>
+          <table>
+            <tr>
+              <th>Golpe</th>
+              <th>Tipo</th>
+              <th>Poder</th>
+              <th>Categoria</th>
+              <th>Precisão</th>
+              <th>PP</th>
+            </tr>
+            {getPokeMoves}
+          </table>
         </div>
       )}
     </div>

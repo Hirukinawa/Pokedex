@@ -44,7 +44,7 @@ export default function Card({ fav, pokemon }: CardProps) {
     <>
       <div onClick={onHandleClick} className="card">
         <div className="image">
-          <img src={link} width="110px" height="110px" />
+          <img src={link} />
         </div>
         <p>
           <b>
