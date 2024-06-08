@@ -11,7 +11,7 @@ const LearnPokeCard: React.FC<LearnPokeCardProps> = ({ id }) => {
   )}.png`;
   return (
     <div className="movecard">
-      <img width={150} height={150} src={link} />
+      <img src={link} />
     </div>
   );
 };

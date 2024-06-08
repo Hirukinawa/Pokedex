@@ -325,17 +325,19 @@ const PokemonDetails: React.FC = () => {
             </div>
           )}
           <h2>Movimentos</h2>
-          <table>
-            <tr>
-              <th>Golpe</th>
-              <th>Tipo</th>
-              <th>Poder</th>
-              <th>Categoria</th>
-              <th>Precisão</th>
-              <th>PP</th>
-            </tr>
-            {getPokeMoves}
-          </table>
+          <div className="table-container">
+            <table>
+              <tr>
+                <th>Golpe</th>
+                <th>Tipo</th>
+                <th>Poder</th>
+                <th>Categoria</th>
+                <th>Precisão</th>
+                <th>PP</th>
+              </tr>
+              {getPokeMoves}
+            </table>
+          </div>
         </div>
       )}
     </div>

@@ -24,7 +24,7 @@ const MoveDetails: React.FC = () => {
   });
 
   return (
-    <div className="bgWhite">
+    <div id="moveDetails" className="bgWhite">
       <h1>{formataName(move.name)}</h1>
       <div className="rowSB">
         <div className="column2">
