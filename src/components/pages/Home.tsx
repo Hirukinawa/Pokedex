@@ -7,16 +7,20 @@ import {
   getPokemons,
   getMorePokemonAPI,
   getUnityPokemon,
+  postApiTeste
 } from "../../service/Axios";
 
 export default function Home() {
   const [pokemons, setPokemons] = useState<PokemonResult[]>([]);
   const [pokemonsUnity, setPokemonsUnity] = useState<PokemonAPI[]>([]);
+  const [teste, setTeste] = useState("");
   const [load, setLoad] = useState(false);
   const firstPokemon = 1;
 
   const getPokemon = async () => {
     try {
+      const tesRes = await postApiTeste();
+      setTeste(tesRes)
       const pkmnsApi = await getPokemons();
       setPokemons(pkmnsApi);
     } catch (error) {
@@ -91,6 +95,7 @@ export default function Home() {
     <div className="bgWhite">
       <div className="row">
         <h1>Pokédex</h1>
+        <h1>{teste}</h1>
       </div>
       <div className="pkmns">
         {pokemonsUnity.length === 0 ? <p>Carregando...</p> : populaPkmn()}

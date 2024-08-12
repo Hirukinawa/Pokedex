@@ -3,6 +3,16 @@ import axios from "axios";
 
 const apiUrl = "https://pokeapi.co/api/v2";
 
+export async function getApiTeste() {
+  const response = await axios.get("https://api-0632.onrender.com/");
+  return response.data;
+}
+
+export async function postApiTeste() {
+  const response = await axios.post("https://api-0632.onrender.com/post");
+  return response.data;
+}
+
 export async function getPokemons() {
   try {
     const response = await axios.get(`${apiUrl}/pokemon?limit=30`);
