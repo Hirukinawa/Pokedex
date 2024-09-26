@@ -8,12 +8,15 @@ import {
   getMorePokemonAPI,
   getUnityPokemon,
 } from "../../service/Axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [pokemons, setPokemons] = useState<PokemonResult[]>([]);
   const [pokemonsUnity, setPokemonsUnity] = useState<PokemonAPI[]>([]);
   const [load, setLoad] = useState(false);
   const firstPokemon = 1;
+
+  const navigate = useNavigate();
 
   const getPokemon = async () => {
     try {
@@ -87,11 +90,16 @@ export default function Home() {
     return pkmns;
   }
 
+  function handleClick() {
+    navigate("/quiz");
+  }
+
   return (
     <div className="bgWhite">
       <div className="row">
         <h1>Pokédex</h1>
       </div>
+      <button onClick={handleClick}>Faça um desenho</button>
       <div className="pkmns">
         {pokemonsUnity.length === 0 ? <p>Carregando...</p> : populaPkmn()}
       </div>

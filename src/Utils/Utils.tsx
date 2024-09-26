@@ -30,3 +30,7 @@ export function formataMove(move: MoveAPI) {
 export function capitalize(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
+
+export function getRandomNumber(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

@@ -6,6 +6,7 @@ import PokemonDetails from "./components/pages/PokemonDetails.tsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MoveDetails from "./components/pages/MoveDetails.tsx";
+import Quiz from "./components/pages/Quiz.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
     path: "/movimento/:name",
     element: <MoveDetails />,
   },
+  {
+    path: "/quiz",
+    element: <Quiz />,
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
