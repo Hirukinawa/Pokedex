@@ -52,9 +52,7 @@ export default function Quiz() {
     }
 
     const imagePokemon = () => {
-        if (pokemon) {
-            return <img id="image-pokemon" src={link} alt={pokemon.name} />
-        }
+        return <img id="image-pokemon" style={{filter: showImage ? 'brightness(1)' : 'brightness(0)'}} src={link} alt={pokemon!.name} />
     }
 
     return (
@@ -71,7 +69,7 @@ export default function Quiz() {
                 <input onChange={handleChange} type="checkbox" id="image" />
                 Revelar aparência
             </label>
-            {showImage && (imagePokemon())}
+            {pokemon && (imagePokemon())}
         </div>
     )
 }
